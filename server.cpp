@@ -270,6 +270,39 @@ bool handleClientCommand(SOCKET clientSocket, const std::string& rawLine, bool& 
         return true;
     }
 
+    if (command == "QUERY_FILTER") {
+        const std::string payload = Protocol::removeCommand(line);
+        const std::vector<std::string> fields = Protocol::splitByChar(payload, '|');
+        if (fields.size() != 6) {
+            sendSimple(clientSocket,
+                       "ERROR Usage: QUERY_FILTER CourseCode|Instructor|Semester|Day|StartTime|EndTime");
+            return true;
+        }
+
+        const std::string code = Protocol::trim(fields[0]);
+        const std::string instructor = Protocol::trim(fields[1]);
+        const std::string semester = Protocol::trim(fields[2]);
+        const std::string day = Protocol::trim(fields[3]);
+        const std::string start = Protocol::trim(fields[4]);
+        const std::string end = Protocol::trim(fields[5]);
+
+        std::string error;
+        if (!CourseDatabase::validateCombinedQueryFilters(code,
+                                                          instructor,
+                                                          semester,
+                                                          day,
+                                                          start,
+                                                          end,
+                                                          error)) {
+            sendSimple(clientSocket, error);
+            return true;
+        }
+
+        sendResult(clientSocket,
+                   g_database.queryCombined(code, instructor, semester, day, start, end));
+        return true;
+    }
+
     if (command == "ADD") {
         return handleAdd(clientSocket, line, isAdmin);
     }
