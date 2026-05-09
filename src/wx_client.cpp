@@ -346,7 +346,7 @@ private:
         codeCtrl_ = new wxTextCtrl(formPanel, wxID_ANY);
         instructorCtrl_ = new wxTextCtrl(formPanel, wxID_ANY);
         semesterChoice_ = new wxChoice(formPanel, wxID_ANY);
-        const char* semesters[] = {"Any", "2026S", "2026F", "2022", "2034", "1"};
+        const char* semesters[] = {"Any", "2025F", "2025S", "2026F", "2026S"};
         for (const char* semester : semesters) {
             semesterChoice_->Append(semester);
         }
@@ -654,7 +654,7 @@ private:
         if (includePlaceholder) {
             choice->Append(placeholder);
         }
-        const char* semesters[] = {"2026S", "2026F", "2022", "2034", "1"};
+        const char* semesters[] = {"2025F", "2025S", "2026F", "2026S"};
         for (const char* semester : semesters) {
             choice->Append(semester);
         }

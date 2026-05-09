@@ -26,6 +26,14 @@ bool containsIgnoreCase(const std::string& text, const std::string& term) {
     return Protocol::toUpper(text).find(Protocol::toUpper(term)) != std::string::npos;
 }
 
+bool isAllowedSemester(const std::string& value) {
+    const std::string semester = Protocol::toUpper(Protocol::trim(value));
+    return semester == "2025F" ||
+           semester == "2025S" ||
+           semester == "2026F" ||
+           semester == "2026S";
+}
+
 std::vector<std::string> parseCsvLine(const std::string& line) {
     std::vector<std::string> fields;
     std::string current;
@@ -214,6 +222,11 @@ bool applyFieldUpdate(Course& course,
         return false;
     }
 
+    if (field == "SEMESTER" && !isAllowedSemester(value)) {
+        message = "ERROR Semester must be one of 2025F, 2025S, 2026F, or 2026S.";
+        return false;
+    }
+
     if (field == "COURSETITLE" || field == "TITLE") {
         course.courseTitle = value;
     } else if (field == "INSTRUCTOR") {
@@ -334,6 +347,11 @@ bool CourseDatabase::validateCourse(const Course& course, std::string& message) 
 
     if (!isValidTime(course.startTime) || !isValidTime(course.endTime)) {
         message = "ERROR StartTime and EndTime must use HH:MM format.";
+        return false;
+    }
+
+    if (!isAllowedSemester(course.semester)) {
+        message = "ERROR Semester must be one of 2025F, 2025S, 2026F, or 2026S.";
         return false;
     }
 
