@@ -1,0 +1,14 @@
+CourseCode,CourseTitle,Section,Instructor,Day,StartTime,EndTime,Classroom,Semester
+COMP3003,Data Communications and Networking,A,John Lee,Mon,09:00,12:00,B201,2026S
+COMP3003,Data Communications and Networking,B,John Lee,Wed,14:00,17:00,B202,2026S
+COMP2001,Object Oriented Programming,A,Alice Chan,Tue,10:00,12:00,A101,2026S
+COMP2012,Database Systems,A,Mary Wong,Thu,09:30,12:30,C301,2026S
+COMP4005,Network Security,A,David Smith,Fri,13:00,16:00,D210,2026S
+MATH1002,Calculus II,A,Kevin Brown,Mon,13:00,15:00,A202,2026S
+STAT2004,Probability and Statistics,A,Lisa Chen,Wed,09:00,11:00,C105,2026S
+COMP3006,Operating Systems,A,Peter Ho,Tue,14:00,17:00,B301,2026S
+COMP4010,Cloud Computing,A,John Lee,Thu,15:00,18:00,D305,2026S
+COMP1010,Introduction to Computer Science,A,Grace Lam,Fri,09:00,11:00,A108,2026F
+xxx123,xxxx,1003,lee,2005.2.2,11:22,12:55,t3222,2022
+xxx123,dsadds,1123,djx,"2006,8,2",11:22,11:33,t23,2034
+COMP1111,vnksdffa,1001,vsfsafasf,Mon,17:00,18:00,101,1
