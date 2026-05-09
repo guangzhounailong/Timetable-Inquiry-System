@@ -16,6 +16,40 @@
 
 namespace {
 
+constexpr WORD DEFAULT_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+constexpr WORD RED_COLOR = FOREGROUND_RED | FOREGROUND_INTENSITY;
+constexpr WORD YELLOW_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+
+bool g_actionOutputYellow = false;
+
+HANDLE consoleOutput() {
+    return GetStdHandle(STD_OUTPUT_HANDLE);
+}
+
+void setConsoleColor(WORD attributes) {
+    SetConsoleTextAttribute(consoleOutput(), attributes);
+}
+
+void resetConsoleColor() {
+    setConsoleColor(DEFAULT_COLOR);
+}
+
+void beginActionOutput() {
+    g_actionOutputYellow = true;
+    setConsoleColor(YELLOW_COLOR);
+}
+
+void endActionOutput() {
+    g_actionOutputYellow = false;
+    resetConsoleColor();
+}
+
+void printColor(const std::string& text, WORD color) {
+    setConsoleColor(color);
+    std::cout << text;
+    resetConsoleColor();
+}
+
 bool shouldPauseBeforeExit() {
     DWORD processIds[4] = {};
     const DWORD count = GetConsoleProcessList(processIds, 4);
@@ -32,35 +66,90 @@ void pauseBeforeExitIfNeeded() {
     std::getline(std::cin, ignored);
 }
 
-std::string prompt(const std::string& label) {
-    std::cout << label;
+std::string prompt(const std::string& label, bool highlight = false) {
+    if (highlight || g_actionOutputYellow) {
+        setConsoleColor(YELLOW_COLOR);
+        std::cout << label;
+        if (!g_actionOutputYellow) {
+            resetConsoleColor();
+        }
+    } else {
+        std::cout << label;
+    }
     std::string value;
     std::getline(std::cin, value);
     return Protocol::trim(value);
 }
 
-std::string promptRequired(const std::string& label) {
+std::string promptRequired(const std::string& label, bool highlight = false) {
     while (true) {
-        std::string value = prompt(label);
+        std::string value = prompt(label, highlight);
         if (!value.empty()) {
             return value;
         }
+        if (g_actionOutputYellow) {
+            setConsoleColor(YELLOW_COLOR);
+        }
         std::cout << "Value cannot be empty." << std::endl;
     }
+}
+
+void printStartupTitle() {
+    std::cout << u8"██████╗  ██████╗███╗   ██╗\n"
+              << u8"██╔══██╗██╔════╝████╗  ██║\n"
+              << u8"██║  ██║██║     ██╔██╗ ██║\n"
+              << u8"██║  ██║██║     ██║╚██╗██║\n"
+              << u8"██████╔╝╚██████╗██║ ╚████║\n"
+              << u8"╚═════╝  ╚═════╝╚═╝  ╚═══╝\n\n"
+              << "Course Timetable Inquiry System\n\n";
+}
+
+void printStartupGreeting(const std::string& greeting) {
+    const std::string readyPrefix = "OK Course Timetable Server Ready.";
+    if (Protocol::startsWithIgnoreCase(greeting, readyPrefix)) {
+        std::string helpText = Protocol::trim(greeting.substr(readyPrefix.size()));
+        if (helpText.empty()) {
+            helpText = "Type HELP for commands.";
+        }
+        std::cout << helpText << std::endl;
+        return;
+    }
+
+    std::cout << greeting << std::endl;
+}
+
+bool readStartupGreeting(SOCKET serverSocket, std::string& greeting) {
+    greeting.clear();
+    if (!Protocol::recvLine(serverSocket, greeting)) {
+        std::cout << "Server disconnected." << std::endl;
+        return false;
+    }
+
+    printStartupTitle();
+    printStartupGreeting(greeting);
+    return true;
 }
 
 bool readResponse(SOCKET serverSocket, std::string& firstLine) {
     firstLine.clear();
     std::string line;
     if (!Protocol::recvLine(serverSocket, line)) {
+        if (g_actionOutputYellow) {
+            setConsoleColor(YELLOW_COLOR);
+        }
         std::cout << "Server disconnected." << std::endl;
         return false;
     }
 
     firstLine = line;
+    const bool isResult = Protocol::startsWithIgnoreCase(line, "RESULT");
+    if (isResult || g_actionOutputYellow) {
+        setConsoleColor(YELLOW_COLOR);
+    }
+
     std::cout << line << std::endl;
 
-    if (Protocol::startsWithIgnoreCase(line, "RESULT ")) {
+    if (isResult) {
         while (Protocol::recvLine(serverSocket, line)) {
             if (line == "END") {
                 break;
@@ -69,11 +158,18 @@ bool readResponse(SOCKET serverSocket, std::string& firstLine) {
         }
     }
 
+    if (!g_actionOutputYellow) {
+        resetConsoleColor();
+    }
+
     return true;
 }
 
 bool sendCommand(SOCKET serverSocket, const std::string& command, std::string& firstLine) {
     if (!Protocol::sendLine(serverSocket, command)) {
+        if (g_actionOutputYellow) {
+            setConsoleColor(YELLOW_COLOR);
+        }
         std::cout << "Failed to send request to server." << std::endl;
         return false;
     }
@@ -81,7 +177,10 @@ bool sendCommand(SOCKET serverSocket, const std::string& command, std::string& f
 }
 
 void printMenu(bool isAdmin) {
-    std::cout << "\n===== Course Timetable Inquiry System =====\n"
+    resetConsoleColor();
+    std::cout << "\n===== ";
+    printColor("Inquiry Options", RED_COLOR);
+    std::cout << " =====\n"
               << "1. Query by course code\n"
               << "2. Query by instructor\n"
               << "3. Query by semester\n"
@@ -96,31 +195,32 @@ void printMenu(bool isAdmin) {
 
     std::cout << "9. Send raw protocol command\n"
               << "0. Exit\n"
-              << "Choose: ";
+              << "===========================\n";
+    printColor("Choose: ", YELLOW_COLOR);
 }
 
 bool queryByCode(SOCKET serverSocket) {
-    const std::string code = promptRequired("Course code (example COMP3003): ");
+    const std::string code = promptRequired("Course code (example COMP3003): ", true);
     std::string response;
     return sendCommand(serverSocket, "QUERY_CODE " + code, response);
 }
 
 bool queryByInstructor(SOCKET serverSocket) {
-    const std::string instructor = promptRequired("Instructor name or keyword: ");
+    const std::string instructor = promptRequired("Instructor name or keyword: ", true);
     std::string response;
     return sendCommand(serverSocket, "QUERY_INSTRUCTOR " + instructor, response);
 }
 
 bool queryBySemester(SOCKET serverSocket) {
-    const std::string semester = promptRequired("Semester (example 2026S): ");
+    const std::string semester = promptRequired("Semester (example 2026S): ", true);
     std::string response;
     return sendCommand(serverSocket, "QUERY_SEMESTER " + semester, response);
 }
 
 bool queryByTimeSlot(SOCKET serverSocket) {
-    const std::string day = promptRequired("Day (example Mon): ");
-    const std::string start = promptRequired("Start time HH:MM: ");
-    const std::string end = promptRequired("End time HH:MM: ");
+    const std::string day = promptRequired("Day (example Mon): ", true);
+    const std::string start = promptRequired("Start time HH:MM: ", true);
+    const std::string end = promptRequired("End time HH:MM: ", true);
     std::string response;
     return sendCommand(serverSocket, "QUERY_TIME " + day + " " + start + " " + end, response);
 }
@@ -213,6 +313,8 @@ SOCKET connectToServer(const std::string& host, int port) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
+    SetConsoleOutputCP(CP_UTF8);
+
     int exitCode = 0;
     std::string host = "127.0.0.1";
     int port = Protocol::DEFAULT_PORT;
@@ -251,7 +353,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::string greeting;
-    if (!readResponse(serverSocket, greeting)) {
+    if (!readStartupGreeting(serverSocket, greeting)) {
         closesocket(serverSocket);
         WSACleanup();
         pauseBeforeExitIfNeeded();
@@ -267,6 +369,7 @@ int main(int argc, char* argv[]) {
         std::getline(std::cin, choice);
         choice = Protocol::trim(choice);
 
+        beginActionOutput();
         bool ok = true;
         if (choice == "1") {
             ok = queryByCode(serverSocket);
@@ -294,6 +397,7 @@ int main(int argc, char* argv[]) {
             std::cout << "Invalid menu choice." << std::endl;
         }
 
+        endActionOutput();
         if (!ok) {
             running = false;
         }
