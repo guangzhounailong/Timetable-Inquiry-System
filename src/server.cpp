@@ -414,7 +414,7 @@ int main(int argc, char* argv[]) {
         std::cerr << databaseMessage << std::endl;
         return 1;
     }
-    std::cout << databaseMessage << std::endl;
+    std::cout << "Database" << std::endl;
 
     WSADATA wsaData;
     const int startupResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
