@@ -27,6 +27,7 @@ public:
     bool addCourse(const Course& course, std::string& message);
     bool updateCourse(const std::string& courseCode,
                       const std::string& section,
+                      const std::string& semester,
                       const std::string& fieldName,
                       const std::string& newValue,
                       std::string& message);
@@ -36,6 +37,7 @@ public:
                                      std::string& message);
     bool deleteCourse(const std::string& courseCode,
                       const std::string& section,
+                      const std::string& semester,
                       std::string& message);
     bool findCourse(const std::string& courseCode,
                     const std::string& section,

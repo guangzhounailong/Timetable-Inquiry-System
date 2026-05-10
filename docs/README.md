@@ -177,13 +177,17 @@ QUERY_SEMESTER 2026S
 QUERY_TIME Mon 09:00 12:00
 QUERY_TIME Mon 09:00-12:00
 ADD CourseCode|CourseTitle|Section|Instructor|Day|StartTime|EndTime|Classroom|Semester
+UPDATE CourseCode Section Semester Field NewValue
 UPDATE CourseCode Section Field NewValue
 UPDATE CourseCode Field NewValue
+DELETE CourseCode Section Semester
 DELETE CourseCode Section
 EXIT
 ```
 
 For `ADD`, fields are separated by `|` so that titles and instructor names can contain spaces.
+Course uniqueness is based on `CourseCode + Section + Semester`, so the same
+course and section can be offered again in another semester.
 
 Supported update fields:
 
@@ -194,13 +198,19 @@ CourseTitle, Instructor, Day, StartTime, EndTime, Time, Classroom, Semester
 Examples:
 
 ```text
+UPDATE COMP3003 A 2026S Classroom B203
 UPDATE COMP3003 A Classroom B203
 UPDATE COMP3003 A StartTime 10:00
 UPDATE COMP3003 A Time Mon 10:00 13:00
 UPDATE COMP1010 Classroom A110
+DELETE COMP3003 A 2026S
 ```
 
-The second update format works only when the course code matches exactly one record. If several sections exist, the server returns an error and asks for the section.
+`UPDATE CourseCode Section Field NewValue` and `DELETE CourseCode Section`
+remain available for older clients. If that course code and section match
+records in more than one semester, the server asks for the semester-specific
+format. `UPDATE CourseCode Field NewValue` works only when the course code
+matches exactly one record.
 
 ### Responses
 
@@ -208,11 +218,14 @@ The second update format works only when the course code matches exactly one rec
 SUCCESS Administrator login accepted.
 FAILURE Invalid administrator username or password.
 RESULT <number of records>
-<readable table>
+CourseCode|CourseTitle|Section|Instructor|Day|StartTime|EndTime|Classroom|Semester
 END
 ERROR <reason>
 OK <message>
 ```
+
+Query responses now return pipe-separated course rows. The field order is:
+`CourseCode|CourseTitle|Section|Instructor|Day|StartTime|EndTime|Classroom|Semester`.
 
 ## Example Commands
 
@@ -231,8 +244,8 @@ Administrator operations:
 ```text
 LOGIN admin 1234
 ADD COMP4999|Special Topics in Networking|A|Henry Yu|Mon|16:00|18:00|E401|2026S
-UPDATE COMP4999 A Classroom E402
-DELETE COMP4999 A
+UPDATE COMP4999 A 2026S Classroom E402
+DELETE COMP4999 A 2026S
 ```
 
 ## How This Project Satisfies the 6 Functional Requirements
@@ -241,6 +254,7 @@ DELETE COMP4999 A
 
 - Stores timetable data in `data/courses.csv`.
 - Uses required fields: `CourseCode, CourseTitle, Section, Instructor, Day, StartTime, EndTime, Classroom, Semester`.
+- Treats `CourseCode + Section + Semester` as the unique course identity.
 - Loads CSV records when the server starts and writes changes immediately.
 
 ### 2. Query Module

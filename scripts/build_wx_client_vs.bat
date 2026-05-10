@@ -54,12 +54,12 @@ if errorlevel 1 exit /b 1
 
 cl /EHsc /std:c++17 /utf-8 /MD /D__WXMSW__ /D_UNICODE /DUNICODE ^
     /I"%INCLUDE_DIR%" /I"%WXWIN%\include" /I"%WX_SETUP_DIR%" ^
-    "%SRC_DIR%\wx_client.cpp" /Fo"%BUILD_DIR%\wx_client.obj" /Fe"%BIN_DIR%\wx_client.exe" ^
+    "%SRC_DIR%\wx_client.cpp" "%SRC_DIR%\SecureChannel.cpp" /Fo"%BUILD_DIR%\\" /Fe"%BIN_DIR%\wx_client.exe" ^
     /link /SUBSYSTEM:WINDOWS /LIBPATH:"%WX_LIB_DIR%" ^
     "%BUILD_DIR%\wx_client.res" ^
     wxmsw33u_core.lib wxbase33u.lib ^
     wxpng.lib wxjpeg.lib wxtiff.lib wxzlib.lib wxregexu.lib wxexpat.lib ^
-    Ws2_32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib shell32.lib ^
+    Ws2_32.lib bcrypt.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib shell32.lib ^
     ole32.lib oleaut32.lib uuid.lib comdlg32.lib gdi32.lib user32.lib ^
     winspool.lib oleacc.lib uxtheme.lib version.lib gdiplus.lib msimg32.lib ^
     shlwapi.lib imm32.lib wininet.lib msvcprt.lib vcruntime.lib ucrt.lib

@@ -384,10 +384,12 @@ bool CourseDatabase::addCourse(const Course& course, std::string& message) {
 
     const std::string newCode = normalizedCode(course.courseCode);
     const std::string newSection = Protocol::toUpper(Protocol::trim(course.section));
+    const std::string newSemester = Protocol::toUpper(Protocol::trim(course.semester));
     for (const Course& existing : courses_) {
         if (normalizedCode(existing.courseCode) == newCode &&
-            Protocol::toUpper(Protocol::trim(existing.section)) == newSection) {
-            message = "ERROR Course code and section already exist.";
+            Protocol::toUpper(Protocol::trim(existing.section)) == newSection &&
+            Protocol::toUpper(Protocol::trim(existing.semester)) == newSemester) {
+            message = "ERROR Course code, section, and semester already exist.";
             return false;
         }
     }
@@ -404,6 +406,7 @@ bool CourseDatabase::addCourse(const Course& course, std::string& message) {
 
 bool CourseDatabase::updateCourse(const std::string& courseCode,
                                   const std::string& section,
+                                  const std::string& semester,
                                   const std::string& fieldName,
                                   const std::string& newValue,
                                   std::string& message) {
@@ -411,26 +414,58 @@ bool CourseDatabase::updateCourse(const std::string& courseCode,
 
     const std::string targetCode = normalizedCode(courseCode);
     const std::string targetSection = Protocol::toUpper(Protocol::trim(section));
+    const std::string targetSemester = Protocol::toUpper(Protocol::trim(semester));
+    const bool useSemester = !targetSemester.empty();
 
-    for (Course& course : courses_) {
+    std::vector<std::size_t> matches;
+    for (std::size_t i = 0; i < courses_.size(); ++i) {
+        const Course& course = courses_[i];
         if (normalizedCode(course.courseCode) == targetCode &&
-            Protocol::toUpper(Protocol::trim(course.section)) == targetSection) {
-            Course updated = course;
-            if (!applyFieldUpdate(updated, fieldName, newValue, message)) {
-                return false;
-            }
-            course = updated;
-            if (!saveUnlocked(message)) {
-                return false;
-            }
-            clearQueryCacheUnlocked();
-            message = "OK Course updated.";
-            return true;
+            Protocol::toUpper(Protocol::trim(course.section)) == targetSection &&
+            (!useSemester ||
+             Protocol::toUpper(Protocol::trim(course.semester)) == targetSemester)) {
+            matches.push_back(i);
         }
     }
 
-    message = "ERROR Course code and section not found.";
-    return false;
+    if (matches.empty()) {
+        message = useSemester
+                      ? "ERROR Course code, section, and semester not found."
+                      : "ERROR Course code and section not found.";
+        return false;
+    }
+
+    if (!useSemester && matches.size() > 1) {
+        message = "ERROR Multiple matching courses found. Please use UPDATE CourseCode Section Semester Field NewValue.";
+        return false;
+    }
+
+    const std::size_t targetIndex = matches.front();
+    Course updated = courses_[targetIndex];
+    if (!applyFieldUpdate(updated, fieldName, newValue, message)) {
+        return false;
+    }
+
+    const std::string updatedCode = normalizedCode(updated.courseCode);
+    const std::string updatedSection = Protocol::toUpper(Protocol::trim(updated.section));
+    const std::string updatedSemester = Protocol::toUpper(Protocol::trim(updated.semester));
+    for (std::size_t i = 0; i < courses_.size(); ++i) {
+        if (i != targetIndex &&
+            normalizedCode(courses_[i].courseCode) == updatedCode &&
+            Protocol::toUpper(Protocol::trim(courses_[i].section)) == updatedSection &&
+            Protocol::toUpper(Protocol::trim(courses_[i].semester)) == updatedSemester) {
+            message = "ERROR Course code, section, and semester already exist.";
+            return false;
+        }
+    }
+
+    courses_[targetIndex] = updated;
+    if (!saveUnlocked(message)) {
+        return false;
+    }
+    clearQueryCacheUnlocked();
+    message = "OK Course updated.";
+    return true;
 }
 
 bool CourseDatabase::updateCourseByCodeIfUnique(const std::string& courseCode,
@@ -462,6 +497,19 @@ bool CourseDatabase::updateCourseByCodeIfUnique(const std::string& courseCode,
         return false;
     }
 
+    const std::string updatedCode = normalizedCode(updated.courseCode);
+    const std::string updatedSection = Protocol::toUpper(Protocol::trim(updated.section));
+    const std::string updatedSemester = Protocol::toUpper(Protocol::trim(updated.semester));
+    for (std::size_t i = 0; i < courses_.size(); ++i) {
+        if (i != matches[0] &&
+            normalizedCode(courses_[i].courseCode) == updatedCode &&
+            Protocol::toUpper(Protocol::trim(courses_[i].section)) == updatedSection &&
+            Protocol::toUpper(Protocol::trim(courses_[i].semester)) == updatedSemester) {
+            message = "ERROR Course code, section, and semester already exist.";
+            return false;
+        }
+    }
+
     courses_[matches[0]] = updated;
     if (!saveUnlocked(message)) {
         return false;
@@ -474,23 +522,39 @@ bool CourseDatabase::updateCourseByCodeIfUnique(const std::string& courseCode,
 
 bool CourseDatabase::deleteCourse(const std::string& courseCode,
                                   const std::string& section,
+                                  const std::string& semester,
                                   std::string& message) {
     std::lock_guard<std::mutex> lock(mutex_);
 
     const std::string targetCode = normalizedCode(courseCode);
     const std::string targetSection = Protocol::toUpper(Protocol::trim(section));
-    const auto oldSize = courses_.size();
+    const std::string targetSemester = Protocol::toUpper(Protocol::trim(semester));
+    const bool useSemester = !targetSemester.empty();
 
-    courses_.erase(std::remove_if(courses_.begin(), courses_.end(),
-        [&](const Course& course) {
-            return normalizedCode(course.courseCode) == targetCode &&
-                   Protocol::toUpper(Protocol::trim(course.section)) == targetSection;
-        }), courses_.end());
+    std::vector<std::size_t> matches;
+    for (std::size_t i = 0; i < courses_.size(); ++i) {
+        const Course& course = courses_[i];
+        if (normalizedCode(course.courseCode) == targetCode &&
+            Protocol::toUpper(Protocol::trim(course.section)) == targetSection &&
+            (!useSemester ||
+             Protocol::toUpper(Protocol::trim(course.semester)) == targetSemester)) {
+            matches.push_back(i);
+        }
+    }
 
-    if (courses_.size() == oldSize) {
-        message = "ERROR Course code and section not found.";
+    if (matches.empty()) {
+        message = useSemester
+                      ? "ERROR Course code, section, and semester not found."
+                      : "ERROR Course code and section not found.";
         return false;
     }
+
+    if (!useSemester && matches.size() > 1) {
+        message = "ERROR Multiple matching courses found. Please use DELETE CourseCode Section Semester.";
+        return false;
+    }
+
+    courses_.erase(courses_.begin() + static_cast<std::ptrdiff_t>(matches.front()));
 
     if (!saveUnlocked(message)) {
         return false;
@@ -688,29 +752,16 @@ std::string CourseDatabase::formatCourses(const std::vector<Course>& courses) co
         return output.str();
     }
 
-    output << std::left
-           << std::setw(12) << "CourseCode"
-           << std::setw(30) << "CourseTitle"
-           << std::setw(9) << "Section"
-           << std::setw(20) << "Instructor"
-           << std::setw(8) << "Day"
-           << std::setw(10) << "Start"
-           << std::setw(10) << "End"
-           << std::setw(12) << "Classroom"
-           << std::setw(10) << "Semester" << '\n';
-    output << std::string(121, '-') << '\n';
-
     for (const Course& course : courses) {
-        output << std::left
-               << std::setw(12) << fit(course.courseCode, 11)
-               << std::setw(30) << fit(course.courseTitle, 29)
-               << std::setw(9) << fit(course.section, 8)
-               << std::setw(20) << fit(course.instructor, 19)
-               << std::setw(8) << fit(course.day, 7)
-               << std::setw(10) << fit(course.startTime, 9)
-               << std::setw(10) << fit(course.endTime, 9)
-               << std::setw(12) << fit(course.classroom, 11)
-               << std::setw(10) << fit(course.semester, 9) << '\n';
+        output << course.courseCode << '|'
+               << course.courseTitle << '|'
+               << course.section << '|'
+               << course.instructor << '|'
+               << course.day << '|'
+               << course.startTime << '|'
+               << course.endTime << '|'
+               << course.classroom << '|'
+               << course.semester << '\n';
     }
 
     return output.str();

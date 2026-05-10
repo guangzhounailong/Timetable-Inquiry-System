@@ -1,0 +1,24 @@
+# Build output
+bin/
+build/
+
+# Visual Studio / Windows
+.vs/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.lib
+*.dll
+*.user
+*.suo
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Editor / OS noise
+.vscode/*.user
+Thumbs.db
+Desktop.ini

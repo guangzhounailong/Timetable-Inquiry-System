@@ -4,6 +4,7 @@
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <windows.h>
 
 #include "CourseDatabase.h"
 #include "Protocol.h"
@@ -40,10 +41,18 @@ std::mutex g_consoleMutex;
 std::atomic<int> g_activeClients{0};
 std::string g_securePsk;
 
+constexpr WORD DEFAULT_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+constexpr WORD TITLE_COLOR = FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+constexpr WORD OK_COLOR = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+constexpr WORD WARN_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+constexpr WORD ERROR_COLOR = FOREGROUND_RED | FOREGROUND_INTENSITY;
+constexpr WORD INFO_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+
 struct ClientConn {
     SOCKET socket = INVALID_SOCKET;
     bool secure = false;
     std::vector<std::uint8_t> aesKey;
+    std::string endpoint;
 
     bool sendLine(const std::string& line) const {
         if (secure) {
@@ -60,9 +69,64 @@ struct ClientConn {
     }
 };
 
+HANDLE consoleOutput() {
+    return GetStdHandle(STD_OUTPUT_HANDLE);
+}
+
+void setConsoleColor(WORD attributes) {
+    SetConsoleTextAttribute(consoleOutput(), attributes);
+}
+
+void resetConsoleColor() {
+    setConsoleColor(DEFAULT_COLOR);
+}
+
+void printColorLine(const std::string& message, WORD color) {
+    setConsoleColor(color);
+    std::cout << message << std::endl;
+    resetConsoleColor();
+}
+
+bool startsWith(const std::string& text, const std::string& prefix) {
+    return text.rfind(prefix, 0) == 0;
+}
+
+WORD logColor(const std::string& message) {
+    if (startsWith(message, "[CONNECT]") || startsWith(message, "[RESPONSE]")) {
+        return OK_COLOR;
+    }
+    if (startsWith(message, "[DISCONNECT]")) {
+        return WARN_COLOR;
+    }
+    if (startsWith(message, "[SECURE]") || startsWith(message, "[REQUEST]") ||
+        startsWith(message, "[ADMIN]")) {
+        return TITLE_COLOR;
+    }
+    if (startsWith(message, "[ERROR]")) {
+        return ERROR_COLOR;
+    }
+    return INFO_COLOR;
+}
+
+void printServerTitle() {
+    printColorLine("==========================================", TITLE_COLOR);
+    printColorLine(" Course Timetable Server", TITLE_COLOR);
+    printColorLine("==========================================", TITLE_COLOR);
+}
+
+void printStartupStatus(const std::string& label, const std::string& detail) {
+    setConsoleColor(OK_COLOR);
+    std::cout << label;
+    resetConsoleColor();
+    if (!detail.empty()) {
+        std::cout << "  " << detail;
+    }
+    std::cout << std::endl;
+}
+
 void logMessage(const std::string& message) {
     std::lock_guard<std::mutex> lock(g_consoleMutex);
-    std::cout << message << std::endl;
+    printColorLine(message, logColor(message));
 }
 
 std::string clientEndpoint(const sockaddr_in& address) {
@@ -72,6 +136,7 @@ std::string clientEndpoint(const sockaddr_in& address) {
 }
 
 void sendSimple(ClientConn& conn, const std::string& response) {
+    logMessage("[RESPONSE] " + conn.endpoint + " " + response);
     conn.sendLine(response);
 }
 
@@ -80,12 +145,14 @@ void sendResult(ClientConn& conn, const std::vector<Course>& courses) {
     response << "RESULT " << courses.size() << '\n'
              << g_database.formatCourses(courses)
              << "END\n";
+    logMessage("[RESPONSE] " + conn.endpoint + " RESULT " + std::to_string(courses.size()));
     conn.sendBlob(response.str());
 }
 
 void sendHelp(ClientConn& conn) {
     std::ostringstream response;
     response << "RESULT 1\n" << Protocol::protocolHelp() << "\nEND\n";
+    logMessage("[RESPONSE] " + conn.endpoint + " RESULT 1");
     conn.sendBlob(response.str());
 }
 
@@ -151,8 +218,10 @@ bool handleLogin(ClientConn& conn, const std::vector<std::string>& tokens, bool&
 
     if (tokens[1] == "admin" && tokens[2] == "1234") {
         isAdmin = true;
+        logMessage("[ADMIN] " + conn.endpoint + " login accepted");
         sendSimple(conn, "SUCCESS Administrator login accepted.");
     } else {
+        logMessage("[ADMIN] " + conn.endpoint + " login rejected");
         sendSimple(conn, "FAILURE Invalid administrator username or password.");
     }
     return true;
@@ -172,6 +241,7 @@ bool handleAdd(ClientConn& conn, const std::string& line, bool isAdmin) {
     }
 
     g_database.addCourse(course, message);
+    logMessage("[ADMIN] " + conn.endpoint + " ADD " + message);
     sendSimple(conn, message);
     return true;
 }
@@ -187,7 +257,7 @@ bool handleUpdate(ClientConn& conn, const std::string& line, bool isAdmin) {
     std::string secondToken;
 
     if (!(input >> courseCode >> secondToken)) {
-        sendSimple(conn, "ERROR Usage: UPDATE CourseCode [Section] Field NewValue.");
+        sendSimple(conn, "ERROR Usage: UPDATE CourseCode [Section] [Semester] Field NewValue.");
         return true;
     }
 
@@ -204,14 +274,27 @@ bool handleUpdate(ClientConn& conn, const std::string& line, bool isAdmin) {
         }
 
         g_database.updateCourseByCodeIfUnique(courseCode, secondToken, newValue, message);
+        logMessage("[ADMIN] " + conn.endpoint + " UPDATE " + message);
         sendSimple(conn, message);
         return true;
     }
 
-    std::string fieldName;
-    if (!(input >> fieldName)) {
+    std::string thirdToken;
+    if (!(input >> thirdToken)) {
         sendSimple(conn, "ERROR Usage: UPDATE CourseCode Section Field NewValue.");
         return true;
+    }
+
+    std::string semester;
+    std::string fieldName;
+    if (CourseDatabase::isUpdatableField(thirdToken)) {
+        fieldName = thirdToken;
+    } else {
+        semester = thirdToken;
+        if (!(input >> fieldName)) {
+            sendSimple(conn, "ERROR Usage: UPDATE CourseCode Section Semester Field NewValue.");
+            return true;
+        }
     }
 
     std::string newValue;
@@ -222,7 +305,8 @@ bool handleUpdate(ClientConn& conn, const std::string& line, bool isAdmin) {
         return true;
     }
 
-    g_database.updateCourse(courseCode, secondToken, fieldName, newValue, message);
+    g_database.updateCourse(courseCode, secondToken, semester, fieldName, newValue, message);
+    logMessage("[ADMIN] " + conn.endpoint + " UPDATE " + message);
     sendSimple(conn, message);
     return true;
 }
@@ -232,13 +316,15 @@ bool handleDelete(ClientConn& conn, const std::vector<std::string>& tokens, bool
         return true;
     }
 
-    if (tokens.size() != 3) {
-        sendSimple(conn, "ERROR Usage: DELETE CourseCode Section.");
+    if (tokens.size() != 3 && tokens.size() != 4) {
+        sendSimple(conn, "ERROR Usage: DELETE CourseCode Section [Semester].");
         return true;
     }
 
     std::string message;
-    g_database.deleteCourse(tokens[1], tokens[2], message);
+    const std::string semester = tokens.size() == 4 ? tokens[3] : "";
+    g_database.deleteCourse(tokens[1], tokens[2], semester, message);
+    logMessage("[ADMIN] " + conn.endpoint + " DELETE " + message);
     sendSimple(conn, message);
     return true;
 }
@@ -293,6 +379,7 @@ bool handleGetCourse(ClientConn& conn, const std::string& line) {
 
     std::ostringstream response;
     response << "RESULT 1\n" << coursePayload(course) << "\nEND\n";
+    logMessage("[RESPONSE] " + conn.endpoint + " RESULT 1");
     conn.sendBlob(response.str());
     return true;
 }
@@ -316,6 +403,7 @@ bool handleClientCommand(ClientConn& conn, const std::string& rawLine, bool& isA
     }
 
     const std::string command = Protocol::toUpper(tokens[0]);
+    logMessage("[REQUEST] " + conn.endpoint + " " + command);
 
     if (command == "EXIT") {
         sendSimple(conn, "OK Goodbye.");
@@ -403,6 +491,7 @@ void handleClient(SOCKET clientSocket, sockaddr_in clientAddress) {
 
     ClientConn conn;
     conn.socket = clientSocket;
+    conn.endpoint = endpoint;
 
     bool isAdmin = false;
     Protocol::sendLine(clientSocket, "OK Course Timetable Server Ready. Type HELP for commands.");
@@ -444,6 +533,8 @@ void handleClient(SOCKET clientSocket, sockaddr_in clientAddress) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
+    SetConsoleOutputCP(CP_UTF8);
+
     int port = Protocol::DEFAULT_PORT;
     g_securePsk.clear();
 
@@ -451,7 +542,7 @@ int main(int argc, char* argv[]) {
         std::string arg = argv[i];
         if (arg == "--secure") {
             if (i + 1 >= argc) {
-                std::cerr << "Missing shared secret after --secure." << std::endl;
+                printColorLine("Missing shared secret after --secure.", ERROR_COLOR);
                 return 1;
             }
             g_securePsk = argv[++i];
@@ -472,34 +563,36 @@ int main(int argc, char* argv[]) {
                     port = parsed;
                 }
             } catch (...) {
-                std::cerr << "Invalid port number." << std::endl;
+                printColorLine("Invalid port number.", ERROR_COLOR);
                 return 1;
             }
         }
     }
 
     if (port <= 0 || port > 65535) {
-        std::cerr << "Port must be between 1 and 65535." << std::endl;
+        printColorLine("Port must be between 1 and 65535.", ERROR_COLOR);
         return 1;
     }
 
+    printServerTitle();
+
     std::string databaseMessage;
     if (!g_database.load(databaseMessage)) {
-        std::cerr << databaseMessage << std::endl;
+        printColorLine(databaseMessage, ERROR_COLOR);
         return 1;
     }
-    std::cout << databaseMessage << std::endl;
+    printStartupStatus("Database", databaseMessage);
 
     WSADATA wsaData;
     const int startupResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (startupResult != 0) {
-        std::cerr << "WSAStartup failed: " << startupResult << std::endl;
+        printColorLine("WSAStartup failed: " + std::to_string(startupResult), ERROR_COLOR);
         return 1;
     }
 
     SOCKET listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listenSocket == INVALID_SOCKET) {
-        std::cerr << "socket failed: " << WSAGetLastError() << std::endl;
+        printColorLine("socket failed: " + std::to_string(WSAGetLastError()), ERROR_COLOR);
         WSACleanup();
         return 1;
     }
@@ -510,25 +603,26 @@ int main(int argc, char* argv[]) {
     serverAddress.sin_port = htons(static_cast<u_short>(port));
 
     if (bind(listenSocket, reinterpret_cast<sockaddr*>(&serverAddress), sizeof(serverAddress)) == SOCKET_ERROR) {
-        std::cerr << "bind failed: " << WSAGetLastError() << std::endl;
+        printColorLine("bind failed: " + std::to_string(WSAGetLastError()), ERROR_COLOR);
         closesocket(listenSocket);
         WSACleanup();
         return 1;
     }
 
     if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR) {
-        std::cerr << "listen failed: " << WSAGetLastError() << std::endl;
+        printColorLine("listen failed: " + std::to_string(WSAGetLastError()), ERROR_COLOR);
         closesocket(listenSocket);
         WSACleanup();
         return 1;
     }
 
-    std::cout << "Server listening on port " << port << std::endl;
-    std::cout << "Minimum concurrent clients supported: "
-              << Protocol::MIN_CONCURRENT_CLIENTS << std::endl;
+    printStartupStatus("Server", "listening on port " + std::to_string(port));
+    printStartupStatus("Concurrency",
+                       "minimum clients supported: " +
+                           std::to_string(Protocol::MIN_CONCURRENT_CLIENTS));
     if (!g_securePsk.empty()) {
-        std::cout << "Secure sessions: enabled (AES-256-GCM + PSK). Clients send SECURE_V1 after the greeting."
-                  << std::endl;
+        printStartupStatus("Secure sessions",
+                           "enabled (AES-256-GCM + PSK). Clients send SECURE_V1 after the greeting.");
     }
 
     while (true) {
@@ -539,7 +633,7 @@ int main(int argc, char* argv[]) {
                                      &clientAddressLength);
 
         if (clientSocket == INVALID_SOCKET) {
-            std::cerr << "accept failed: " << WSAGetLastError() << std::endl;
+            printColorLine("accept failed: " + std::to_string(WSAGetLastError()), ERROR_COLOR);
             continue;
         }
 

@@ -80,11 +80,22 @@ wxString stdToWx(const std::string& value) {
     return wxString::FromUTF8(value.c_str());
 }
 
-std::string readFixedField(const std::string& line, std::size_t begin, std::size_t width) {
-    if (line.size() <= begin) {
-        return "";
+bool parseCoursePayloadRow(const std::string& line, CourseRow& row) {
+    const std::vector<std::string> fields = Protocol::splitByChar(line, '|');
+    if (fields.size() != 9) {
+        return false;
     }
-    return Protocol::trim(line.substr(begin, width));
+
+    row.code = fields[0];
+    row.title = fields[1];
+    row.section = fields[2];
+    row.instructor = fields[3];
+    row.day = fields[4];
+    row.start = fields[5];
+    row.end = fields[6];
+    row.classroom = fields[7];
+    row.semester = fields[8];
+    return true;
 }
 
 std::vector<CourseRow> parseCourseRows(const ServerResponse& response) {
@@ -94,25 +105,15 @@ std::vector<CourseRow> parseCourseRows(const ServerResponse& response) {
     }
 
     for (const std::string& line : response.bodyLines) {
-        if (line.empty() ||
-            line.find("---") == 0 ||
-            Protocol::startsWithIgnoreCase(line, "CourseCode") ||
-            Protocol::startsWithIgnoreCase(line, "No matching courses.")) {
+        const std::string trimmed = Protocol::trim(line);
+        if (trimmed.empty() ||
+            Protocol::startsWithIgnoreCase(trimmed, "END") ||
+            Protocol::startsWithIgnoreCase(trimmed, "No matching courses.")) {
             continue;
         }
 
         CourseRow row;
-        row.code = readFixedField(line, 0, 12);
-        row.title = readFixedField(line, 12, 30);
-        row.section = readFixedField(line, 42, 9);
-        row.instructor = readFixedField(line, 51, 20);
-        row.day = readFixedField(line, 71, 8);
-        row.start = readFixedField(line, 79, 10);
-        row.end = readFixedField(line, 89, 10);
-        row.classroom = readFixedField(line, 99, 12);
-        row.semester = readFixedField(line, 111, 10);
-
-        if (!row.code.empty()) {
+        if (parseCoursePayloadRow(trimmed, row)) {
             rows.push_back(row);
         }
     }
@@ -139,24 +140,6 @@ void parseSecureServerBlock(const std::string& block, ServerResponse& response) 
             response.bodyLines.push_back(line);
         }
     }
-}
-
-bool parseCoursePayloadRow(const std::string& line, CourseRow& row) {
-    const std::vector<std::string> fields = Protocol::splitByChar(line, '|');
-    if (fields.size() != 9) {
-        return false;
-    }
-
-    row.code = fields[0];
-    row.title = fields[1];
-    row.section = fields[2];
-    row.instructor = fields[3];
-    row.day = fields[4];
-    row.start = fields[5];
-    row.end = fields[6];
-    row.classroom = fields[7];
-    row.semester = fields[8];
-    return true;
 }
 
 class CourseTcpClient {
@@ -1124,10 +1107,12 @@ private:
 
         const std::string courseCode = loadedCourse_.code;
         const std::string section = loadedCourse_.section;
+        const std::string semester = loadedCourse_.semester;
         std::vector<std::string> updateCommands;
         updateCommands.reserve(changes.size());
         for (const auto& change : changes) {
             updateCommands.push_back("UPDATE " + courseCode + " " + section + " " +
+                                     semester + " " +
                                      change.first + " " + change.second);
         }
 
@@ -1281,7 +1266,8 @@ private:
             return;
         }
 
-        RunCommandAsync("DELETE " + deleteCourse_.code + " " + deleteCourse_.section);
+        RunCommandAsync("DELETE " + deleteCourse_.code + " " +
+                        deleteCourse_.section + " " + deleteCourse_.semester);
     }
 
     void ConnectAsync() {

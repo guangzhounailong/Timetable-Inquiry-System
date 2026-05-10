@@ -147,8 +147,10 @@ inline std::string protocolHelp() {
         "QUERY_SEMESTER 2026S\n"
         "QUERY_TIME Mon 09:00 12:00\n"
         "ADD CourseCode|CourseTitle|Section|Instructor|Day|StartTime|EndTime|Classroom|Semester\n"
+        "UPDATE CourseCode Section Semester Field NewValue\n"
         "UPDATE CourseCode Section Field NewValue\n"
         "UPDATE CourseCode Field NewValue\n"
+        "DELETE CourseCode Section Semester\n"
         "DELETE CourseCode Section\n"
         "EXIT";
 }
