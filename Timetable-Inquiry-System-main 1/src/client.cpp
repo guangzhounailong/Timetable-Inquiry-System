@@ -9,7 +9,9 @@
 #include "Protocol.h"
 #include "SecureChannel.h"
 
+#include <chrono>
 #include <cstdint>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -234,6 +236,42 @@ bool sendCommand(Session& session, const std::string& command, std::string& firs
     return readResponse(session, firstLine);
 }
 
+bool hasNonEmptyResult(const std::string& firstLine) {
+    if (!Protocol::startsWithIgnoreCase(firstLine, "RESULT")) {
+        return false;
+    }
+
+    std::istringstream input(firstLine);
+    std::string marker;
+    int count = 0;
+    if (!(input >> marker >> count)) {
+        return false;
+    }
+    return count > 0;
+}
+
+void printQueryTime(double elapsedMs) {
+    std::ostringstream output;
+    output << std::fixed << std::setprecision(3)
+           << "Query time: " << elapsedMs << " ms";
+    std::cout << output.str() << std::endl;
+}
+
+bool sendTimedQuery(Session& session, const std::string& command) {
+    std::string response;
+    const auto start = std::chrono::steady_clock::now();
+    const bool ok = sendCommand(session, command, response);
+    const auto end = std::chrono::steady_clock::now();
+
+    if (ok && hasNonEmptyResult(response)) {
+        const double elapsedMs =
+            std::chrono::duration<double, std::milli>(end - start).count();
+        printQueryTime(elapsedMs);
+    }
+
+    return ok;
+}
+
 void printMenu(bool isAdmin) {
     resetConsoleColor();
     std::cout << "\n===== ";
@@ -259,28 +297,24 @@ void printMenu(bool isAdmin) {
 
 bool queryByCode(Session& session) {
     const std::string code = promptRequired("Course code (example COMP3003): ", true);
-    std::string response;
-    return sendCommand(session, "QUERY_CODE " + code, response);
+    return sendTimedQuery(session, "QUERY_CODE " + code);
 }
 
 bool queryByInstructor(Session& session) {
     const std::string instructor = promptRequired("Instructor name or keyword: ", true);
-    std::string response;
-    return sendCommand(session, "QUERY_INSTRUCTOR " + instructor, response);
+    return sendTimedQuery(session, "QUERY_INSTRUCTOR " + instructor);
 }
 
 bool queryBySemester(Session& session) {
     const std::string semester = promptRequired("Semester (example 2026S): ", true);
-    std::string response;
-    return sendCommand(session, "QUERY_SEMESTER " + semester, response);
+    return sendTimedQuery(session, "QUERY_SEMESTER " + semester);
 }
 
 bool queryByTimeSlot(Session& session) {
     const std::string day = promptRequired("Day (example Mon): ", true);
     const std::string start = promptRequired("Start time HH:MM: ", true);
     const std::string end = promptRequired("End time HH:MM: ", true);
-    std::string response;
-    return sendCommand(session, "QUERY_TIME " + day + " " + start + " " + end, response);
+    return sendTimedQuery(session, "QUERY_TIME " + day + " " + start + " " + end);
 }
 
 bool adminLogin(Session& session, bool& isAdmin) {
