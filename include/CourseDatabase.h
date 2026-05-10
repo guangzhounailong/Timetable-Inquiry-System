@@ -1,8 +1,10 @@
 #ifndef COURSE_DATABASE_H
 #define COURSE_DATABASE_H
 
+#include <cstddef>
 #include <mutex>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 struct Course {
@@ -62,9 +64,15 @@ public:
     static bool isValidTime(const std::string& timeText);
 
 private:
+    static constexpr std::size_t kMaxQueryCacheEntries = 512;
+
     std::string filePath_;
     mutable std::mutex mutex_;
     std::vector<Course> courses_;
+    mutable std::unordered_map<std::string, std::vector<Course>> queryCache_;
+
+    void clearQueryCacheUnlocked() const;
+    void putQueryCacheUnlocked(const std::string& key, std::vector<Course> value) const;
 
     bool loadUnlocked(std::string& message);
     bool saveUnlocked(std::string& message) const;

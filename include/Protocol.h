@@ -138,6 +138,7 @@ inline bool recvLine(SOCKET socketHandle, std::string& line) {
 inline std::string protocolHelp() {
     return
         "Commands:\n"
+        "SECURE_V1 <32-hex nonce>  (optional; after greeting if server uses --secure <psk>)\n"
         "LOGIN admin 1234\n"
         "GET_COURSE CourseCode|Section|Semester\n"
         "QUERY_FILTER CourseCode|Instructor|Semester|Day|StartTime|EndTime\n"

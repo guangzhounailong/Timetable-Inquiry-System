@@ -22,10 +22,12 @@ CourseTimetableSystem/
 |   |-- server.cpp              # Winsock server, request handling, multithreading
 |   |-- client.cpp              # Console menu client and raw command client
 |   |-- CourseDatabase.cpp      # CSV loading, saving, querying, add/update/delete
+|   |-- SecureChannel.cpp       # Optional AES-256-GCM session (BCrypt)
 |   `-- wx_client.cpp           # wxWidgets GUI client
 |-- include/
 |   |-- CourseDatabase.h        # Course data structure and database interface
-|   `-- Protocol.h              # Line-based protocol helpers and socket helpers
+|   |-- Protocol.h              # Line-based protocol helpers and socket helpers
+|   `-- SecureChannel.h         # Encrypted transport helpers
 |-- data/
 |   `-- courses.csv             # Timetable database
 |-- scripts/
@@ -43,8 +45,8 @@ Run commands inside the `CourseTimetableSystem` folder.
 ### MinGW g++
 
 ```powershell
-g++ -std=c++17 -Iinclude src/server.cpp src/CourseDatabase.cpp -o bin/server.exe -lws2_32
-g++ -std=c++17 -Iinclude src/client.cpp -o bin/client.exe -lws2_32
+g++ -std=c++17 -Iinclude src/server.cpp src/CourseDatabase.cpp src/SecureChannel.cpp -o bin/server.exe -lws2_32 -lbcrypt
+g++ -std=c++17 -Iinclude src/client.cpp src/SecureChannel.cpp -o bin/client.exe -lws2_32 -lbcrypt
 ```
 
 Optional wxWidgets GUI client, using an MSYS2/MinGW environment where
@@ -53,14 +55,14 @@ Optional wxWidgets GUI client, using an MSYS2/MinGW environment where
 ```powershell
 $wxCflags = wx-config --cxxflags
 $wxLibs = wx-config --libs
-g++ -std=c++17 -Iinclude src/wx_client.cpp -o bin/wx_client.exe $wxCflags $wxLibs -lws2_32 -mwindows
+g++ -std=c++17 -Iinclude src/wx_client.cpp src/SecureChannel.cpp -o bin/wx_client.exe $wxCflags $wxLibs -lws2_32 -lbcrypt -mwindows
 ```
 
 ### Visual Studio Developer Command Prompt
 
 ```cmd
-cl /EHsc /std:c++17 /Iinclude src\server.cpp src\CourseDatabase.cpp /Fe:bin\server.exe Ws2_32.lib
-cl /EHsc /std:c++17 /Iinclude src\client.cpp /Fe:bin\client.exe Ws2_32.lib
+cl /EHsc /std:c++17 /Iinclude src\server.cpp src\CourseDatabase.cpp src\SecureChannel.cpp /Fe:bin\server.exe Ws2_32.lib bcrypt.lib
+cl /EHsc /std:c++17 /Iinclude src\client.cpp src\SecureChannel.cpp /Fe:bin\client.exe Ws2_32.lib bcrypt.lib
 ```
 
 For the local Visual Studio wxWidgets installation in `E:\wxWidgets`, open
@@ -102,6 +104,12 @@ Optional custom port:
 .\bin\server.exe 54000
 ```
 
+Optional **encrypted sessions** (AES-256-GCM with a pre-shared key). Clients that support it negotiate after the greeting; plain-text clients are still allowed.
+
+```powershell
+.\bin\server.exe --secure YourSharedSecret 54000
+```
+
 Keep the server window open. Run it from the project root so the server reads and writes `data/courses.csv`.
 
 ## How to Run the Client
@@ -116,6 +124,12 @@ Optional server IP and port:
 
 ```powershell
 .\bin\client.exe 127.0.0.1 54000
+```
+
+Encrypted transport (must match server `--secure` password):
+
+```powershell
+.\bin\client.exe 127.0.0.1 54000 --secure YourSharedSecret
 ```
 
 For concurrency testing, open at least five client windows and connect them to the same server.
@@ -145,6 +159,8 @@ Then start the wxWidgets client:
 The GUI client connects to `127.0.0.1:54000` by default. It provides tabs for
 student queries, administrator login and update operations, and raw protocol
 commands. Administrator credentials are still `admin / 1234`.
+
+Enter the same **PSK** in the **PSK** field when connecting if the server was started with `--secure`.
 
 ## Communication Protocol
 
@@ -299,6 +315,16 @@ protocol and provides:
 
 No server-side change is required because the GUI client sends the same
 protocol commands as the console client.
+
+### Bonus 4: Secure communication (optional)
+
+Implemented with Windows **BCrypt** (`src/SecureChannel.cpp`): after the usual
+plaintext greeting, the client may send `SECURE_V1 <32-hex nonce>` and receive
+`SECURE_OK <server-nonce>`; both sides derive an AES-256 key with SHA-256 over
+the PSK and nonces, then wrap each application message in AES-256-GCM frames
+(length-prefixed). Start the server with `--secure <psk>`; use `client.exe ...
+--secure <psk>` or the GUI **PSK** field. Legacy clients without this step keep
+working on the same port.
 
 ## Demo Steps for Presentation
 

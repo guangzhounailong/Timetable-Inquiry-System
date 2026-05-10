@@ -6,6 +6,7 @@
 #include <ws2tcpip.h>
 
 #include "Protocol.h"
+#include "SecureChannel.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -25,6 +26,7 @@
 #include <wx/wx.h>
 
 #include <atomic>
+#include <cstdint>
 #include <mutex>
 #include <sstream>
 #include <string>
@@ -118,6 +120,27 @@ std::vector<CourseRow> parseCourseRows(const ServerResponse& response) {
     return rows;
 }
 
+void parseSecureServerBlock(const std::string& block, ServerResponse& response) {
+    std::istringstream input(block);
+    std::getline(input, response.firstLine);
+    if (!response.firstLine.empty() && response.firstLine.back() == '\r') {
+        response.firstLine.pop_back();
+    }
+
+    if (Protocol::startsWithIgnoreCase(response.firstLine, "RESULT ")) {
+        std::string line;
+        while (std::getline(input, line)) {
+            if (!line.empty() && line.back() == '\r') {
+                line.pop_back();
+            }
+            if (line == "END") {
+                break;
+            }
+            response.bodyLines.push_back(line);
+        }
+    }
+}
+
 bool parseCoursePayloadRow(const std::string& line, CourseRow& row) {
     const std::vector<std::string> fields = Protocol::splitByChar(line, '|');
     if (fields.size() != 9) {
@@ -147,7 +170,12 @@ public:
         return socket_ != INVALID_SOCKET;
     }
 
-    ServerResponse connectTo(const std::string& host, int port) {
+    bool isSecure() const {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return secure_;
+    }
+
+    ServerResponse connectTo(const std::string& host, int port, const std::string& securePsk) {
         std::lock_guard<std::mutex> lock(mutex_);
         ServerResponse response;
 
@@ -187,9 +215,25 @@ public:
         }
 
         socket_ = serverSocket;
+        response.firstLine = greeting;
+
+        if (!securePsk.empty()) {
+            std::string handshakeError;
+            if (!SecureChannel::clientHandshake(serverSocket, securePsk, aesKey_, handshakeError)) {
+                closesocket(serverSocket);
+                socket_ = INVALID_SOCKET;
+                aesKey_.clear();
+                secure_ = false;
+                response.error = handshakeError;
+                response.connected = false;
+                response.ok = false;
+                return response;
+            }
+            secure_ = true;
+        }
+
         response.ok = true;
         response.connected = true;
-        response.firstLine = greeting;
         return response;
     }
 
@@ -200,6 +244,28 @@ public:
 
         if (socket_ == INVALID_SOCKET) {
             response.error = "Not connected to the server.";
+            return response;
+        }
+
+        if (secure_) {
+            if (!SecureChannel::sendSecureFrame(socket_, aesKey_, command + "\n")) {
+                closeSocketUnlocked();
+                response.connected = false;
+                response.error = "Failed to send request to the server.";
+                return response;
+            }
+
+            std::string block;
+            if (!SecureChannel::recvSecureFrame(socket_, aesKey_, block)) {
+                closeSocketUnlocked();
+                response.connected = false;
+                response.error = "Server disconnected.";
+                return response;
+            }
+
+            response.ok = true;
+            response.connected = socket_ != INVALID_SOCKET;
+            parseSecureServerBlock(block, response);
             return response;
         }
 
@@ -245,10 +311,14 @@ private:
             closesocket(socket_);
             socket_ = INVALID_SOCKET;
         }
+        secure_ = false;
+        aesKey_.clear();
     }
 
     mutable std::mutex mutex_;
     SOCKET socket_ = INVALID_SOCKET;
+    bool secure_ = false;
+    std::vector<std::uint8_t> aesKey_;
 };
 
 class MainFrame : public wxFrame {
@@ -318,6 +388,16 @@ private:
         portCtrl_->SetRange(1, 65535);
         portCtrl_->SetValue(Protocol::DEFAULT_PORT);
         sizer->Add(portCtrl_, 0, wxRIGHT, 12);
+
+        sizer->Add(new wxStaticText(parent, wxID_ANY, "PSK"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
+        pskCtrl_ = new wxTextCtrl(parent,
+                                  wxID_ANY,
+                                  "",
+                                  wxDefaultPosition,
+                                  wxSize(180, -1),
+                                  wxTE_PASSWORD);
+        pskCtrl_->SetHint("optional; AES-GCM if set");
+        sizer->Add(pskCtrl_, 0, wxRIGHT, 12);
 
         connectButton_ = new wxButton(parent, wxID_ANY, "Connect");
         disconnectButton_ = new wxButton(parent, wxID_ANY, "Disconnect");
@@ -1211,6 +1291,7 @@ private:
 
         const std::string host = wxToStd(hostCtrl_->GetValue());
         const int port = portCtrl_->GetValue();
+        const std::string psk = wxToStd(pskCtrl_->GetValue());
 
         if (host.empty()) {
             wxMessageBox("Host cannot be empty.", "Missing Value", wxOK | wxICON_WARNING, this);
@@ -1225,10 +1306,11 @@ private:
         SetControlsEnabled(false);
         SetStatusText("Connecting...");
         connectionLabel_->SetLabel("Connecting...");
-        AppendSendLog("CONNECT " + host + ":" + std::to_string(port));
+        AppendSendLog("CONNECT " + host + ":" + std::to_string(port) +
+                      (psk.empty() ? "" : " (secure)"));
 
-        worker_ = std::thread([this, host, port]() {
-            ServerResponse response = client_.connectTo(host, port);
+        worker_ = std::thread([this, host, port, psk]() {
+            ServerResponse response = client_.connectTo(host, port, psk);
             QueueResult(response, "CONNECT");
         });
     }
@@ -1474,11 +1556,13 @@ private:
     }
 
     void UpdateConnectionState(bool connected) {
-        connectionLabel_->SetLabel(connected ? "Connected" : "Disconnected");
+        connectionLabel_->SetLabel(connected ? (client_.isSecure() ? "Connected (encrypted)" : "Connected")
+                                           : "Disconnected");
         connectButton_->Enable(!connected && !busy_);
         disconnectButton_->Enable(connected && !busy_);
         hostCtrl_->Enable(!connected && !busy_);
         portCtrl_->Enable(!connected && !busy_);
+        pskCtrl_->Enable(!connected && !busy_);
         UpdateQueryControls();
         UpdateAdminState();
     }
@@ -1545,6 +1629,7 @@ private:
         disconnectButton_->Enable(enabled && connected);
         hostCtrl_->Enable(enabled && !connected);
         portCtrl_->Enable(enabled && !connected);
+        pskCtrl_->Enable(enabled && !connected);
 
         UpdateQueryControls();
         loginButton_->Enable(enabled && connected);
@@ -1597,6 +1682,7 @@ private:
     wxNotebook* notebook_ = nullptr;
     wxTextCtrl* hostCtrl_ = nullptr;
     wxSpinCtrl* portCtrl_ = nullptr;
+    wxTextCtrl* pskCtrl_ = nullptr;
     wxButton* connectButton_ = nullptr;
     wxButton* disconnectButton_ = nullptr;
     wxStaticText* connectionLabel_ = nullptr;

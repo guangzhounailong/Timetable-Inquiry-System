@@ -7,8 +7,11 @@
 
 #include "CourseDatabase.h"
 #include "Protocol.h"
+#include "SecureChannel.h"
 
 #include <atomic>
+#include <cctype>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <mutex>
@@ -35,6 +38,27 @@ std::string databasePath() {
 CourseDatabase g_database(databasePath());
 std::mutex g_consoleMutex;
 std::atomic<int> g_activeClients{0};
+std::string g_securePsk;
+
+struct ClientConn {
+    SOCKET socket = INVALID_SOCKET;
+    bool secure = false;
+    std::vector<std::uint8_t> aesKey;
+
+    bool sendLine(const std::string& line) const {
+        if (secure) {
+            return SecureChannel::sendSecureFrame(socket, aesKey, line + "\n");
+        }
+        return Protocol::sendLine(socket, line);
+    }
+
+    bool sendBlob(const std::string& blob) const {
+        if (secure) {
+            return SecureChannel::sendSecureFrame(socket, aesKey, blob);
+        }
+        return Protocol::sendAll(socket, blob);
+    }
+};
 
 void logMessage(const std::string& message) {
     std::lock_guard<std::mutex> lock(g_consoleMutex);
@@ -47,22 +71,22 @@ std::string clientEndpoint(const sockaddr_in& address) {
     return output.str();
 }
 
-void sendSimple(SOCKET clientSocket, const std::string& response) {
-    Protocol::sendLine(clientSocket, response);
+void sendSimple(ClientConn& conn, const std::string& response) {
+    conn.sendLine(response);
 }
 
-void sendResult(SOCKET clientSocket, const std::vector<Course>& courses) {
+void sendResult(ClientConn& conn, const std::vector<Course>& courses) {
     std::ostringstream response;
     response << "RESULT " << courses.size() << '\n'
              << g_database.formatCourses(courses)
              << "END\n";
-    Protocol::sendAll(clientSocket, response.str());
+    conn.sendBlob(response.str());
 }
 
-void sendHelp(SOCKET clientSocket) {
+void sendHelp(ClientConn& conn) {
     std::ostringstream response;
     response << "RESULT 1\n" << Protocol::protocolHelp() << "\nEND\n";
-    Protocol::sendAll(clientSocket, response.str());
+    conn.sendBlob(response.str());
 }
 
 std::string coursePayload(const Course& course) {
@@ -77,9 +101,9 @@ std::string coursePayload(const Course& course) {
            course.semester;
 }
 
-bool requireAdmin(SOCKET clientSocket, bool isAdmin) {
+bool requireAdmin(ClientConn& conn, bool isAdmin) {
     if (!isAdmin) {
-        sendSimple(clientSocket, "FAILURE Administrator login required.");
+        sendSimple(conn, "FAILURE Administrator login required.");
         return false;
     }
     return true;
@@ -119,23 +143,23 @@ bool parseTimeQuery(const std::string& rest,
     return true;
 }
 
-bool handleLogin(SOCKET clientSocket, const std::vector<std::string>& tokens, bool& isAdmin) {
+bool handleLogin(ClientConn& conn, const std::vector<std::string>& tokens, bool& isAdmin) {
     if (tokens.size() != 3) {
-        sendSimple(clientSocket, "ERROR Usage: LOGIN username password.");
+        sendSimple(conn, "ERROR Usage: LOGIN username password.");
         return true;
     }
 
     if (tokens[1] == "admin" && tokens[2] == "1234") {
         isAdmin = true;
-        sendSimple(clientSocket, "SUCCESS Administrator login accepted.");
+        sendSimple(conn, "SUCCESS Administrator login accepted.");
     } else {
-        sendSimple(clientSocket, "FAILURE Invalid administrator username or password.");
+        sendSimple(conn, "FAILURE Invalid administrator username or password.");
     }
     return true;
 }
 
-bool handleAdd(SOCKET clientSocket, const std::string& line, bool isAdmin) {
-    if (!requireAdmin(clientSocket, isAdmin)) {
+bool handleAdd(ClientConn& conn, const std::string& line, bool isAdmin) {
+    if (!requireAdmin(conn, isAdmin)) {
         return true;
     }
 
@@ -143,17 +167,17 @@ bool handleAdd(SOCKET clientSocket, const std::string& line, bool isAdmin) {
     Course course;
     std::string message;
     if (!CourseDatabase::parseCoursePayload(payload, course, message)) {
-        sendSimple(clientSocket, message);
+        sendSimple(conn, message);
         return true;
     }
 
     g_database.addCourse(course, message);
-    sendSimple(clientSocket, message);
+    sendSimple(conn, message);
     return true;
 }
 
-bool handleUpdate(SOCKET clientSocket, const std::string& line, bool isAdmin) {
-    if (!requireAdmin(clientSocket, isAdmin)) {
+bool handleUpdate(ClientConn& conn, const std::string& line, bool isAdmin) {
+    if (!requireAdmin(conn, isAdmin)) {
         return true;
     }
 
@@ -163,7 +187,7 @@ bool handleUpdate(SOCKET clientSocket, const std::string& line, bool isAdmin) {
     std::string secondToken;
 
     if (!(input >> courseCode >> secondToken)) {
-        sendSimple(clientSocket, "ERROR Usage: UPDATE CourseCode [Section] Field NewValue.");
+        sendSimple(conn, "ERROR Usage: UPDATE CourseCode [Section] Field NewValue.");
         return true;
     }
 
@@ -175,18 +199,18 @@ bool handleUpdate(SOCKET clientSocket, const std::string& line, bool isAdmin) {
         newValue = Protocol::trim(newValue);
 
         if (newValue.empty()) {
-            sendSimple(clientSocket, "ERROR New value cannot be empty.");
+            sendSimple(conn, "ERROR New value cannot be empty.");
             return true;
         }
 
         g_database.updateCourseByCodeIfUnique(courseCode, secondToken, newValue, message);
-        sendSimple(clientSocket, message);
+        sendSimple(conn, message);
         return true;
     }
 
     std::string fieldName;
     if (!(input >> fieldName)) {
-        sendSimple(clientSocket, "ERROR Usage: UPDATE CourseCode Section Field NewValue.");
+        sendSimple(conn, "ERROR Usage: UPDATE CourseCode Section Field NewValue.");
         return true;
     }
 
@@ -194,35 +218,35 @@ bool handleUpdate(SOCKET clientSocket, const std::string& line, bool isAdmin) {
     std::getline(input, newValue);
     newValue = Protocol::trim(newValue);
     if (newValue.empty()) {
-        sendSimple(clientSocket, "ERROR New value cannot be empty.");
+        sendSimple(conn, "ERROR New value cannot be empty.");
         return true;
     }
 
     g_database.updateCourse(courseCode, secondToken, fieldName, newValue, message);
-    sendSimple(clientSocket, message);
+    sendSimple(conn, message);
     return true;
 }
 
-bool handleDelete(SOCKET clientSocket, const std::vector<std::string>& tokens, bool isAdmin) {
-    if (!requireAdmin(clientSocket, isAdmin)) {
+bool handleDelete(ClientConn& conn, const std::vector<std::string>& tokens, bool isAdmin) {
+    if (!requireAdmin(conn, isAdmin)) {
         return true;
     }
 
     if (tokens.size() != 3) {
-        sendSimple(clientSocket, "ERROR Usage: DELETE CourseCode Section.");
+        sendSimple(conn, "ERROR Usage: DELETE CourseCode Section.");
         return true;
     }
 
     std::string message;
     g_database.deleteCourse(tokens[1], tokens[2], message);
-    sendSimple(clientSocket, message);
+    sendSimple(conn, message);
     return true;
 }
 
-bool handleQueryFilter(SOCKET clientSocket, const std::string& line) {
+bool handleQueryFilter(ClientConn& conn, const std::string& line) {
     std::vector<std::string> parts = Protocol::splitByChar(Protocol::removeCommand(line), '|');
     if (parts.size() > 6) {
-        sendSimple(clientSocket, "ERROR Usage: QUERY_FILTER CourseCode|Instructor|Semester|Day|StartTime|EndTime.");
+        sendSimple(conn, "ERROR Usage: QUERY_FILTER CourseCode|Instructor|Semester|Day|StartTime|EndTime.");
         return true;
     }
 
@@ -234,26 +258,26 @@ bool handleQueryFilter(SOCKET clientSocket, const std::string& line) {
     const std::string end = Protocol::trim(parts[5]);
     if ((!start.empty() && !CourseDatabase::isValidTime(start)) ||
         (!end.empty() && !CourseDatabase::isValidTime(end))) {
-        sendSimple(clientSocket, "ERROR Time must use HH:MM format.");
+        sendSimple(conn, "ERROR Time must use HH:MM format.");
         return true;
     }
 
     if (!start.empty() && !end.empty() &&
         std::stoi(start.substr(0, 2)) * 60 + std::stoi(start.substr(3, 2)) >=
             std::stoi(end.substr(0, 2)) * 60 + std::stoi(end.substr(3, 2))) {
-        sendSimple(clientSocket, "ERROR StartTime must be earlier than EndTime.");
+        sendSimple(conn, "ERROR StartTime must be earlier than EndTime.");
         return true;
     }
 
-    sendResult(clientSocket,
+    sendResult(conn,
                g_database.queryByFilters(parts[0], parts[1], parts[2], parts[3], start, end));
     return true;
 }
 
-bool handleGetCourse(SOCKET clientSocket, const std::string& line) {
+bool handleGetCourse(ClientConn& conn, const std::string& line) {
     std::vector<std::string> parts = Protocol::splitByChar(Protocol::removeCommand(line), '|');
     if (parts.size() < 2 || parts.size() > 3) {
-        sendSimple(clientSocket, "ERROR Usage: GET_COURSE CourseCode|Section|Semester.");
+        sendSimple(conn, "ERROR Usage: GET_COURSE CourseCode|Section|Semester.");
         return true;
     }
 
@@ -263,83 +287,83 @@ bool handleGetCourse(SOCKET clientSocket, const std::string& line) {
 
     Course course;
     if (!g_database.findCourse(parts[0], parts[1], parts[2], course)) {
-        sendSimple(clientSocket, "ERROR Course not found.");
+        sendSimple(conn, "ERROR Course not found.");
         return true;
     }
 
     std::ostringstream response;
     response << "RESULT 1\n" << coursePayload(course) << "\nEND\n";
-    Protocol::sendAll(clientSocket, response.str());
+    conn.sendBlob(response.str());
     return true;
 }
 
-bool handleClientCommand(SOCKET clientSocket, const std::string& rawLine, bool& isAdmin) {
+bool handleClientCommand(ClientConn& conn, const std::string& rawLine, bool& isAdmin) {
     const std::string line = Protocol::trim(rawLine);
     if (line.empty()) {
-        sendSimple(clientSocket, "ERROR Empty request.");
+        sendSimple(conn, "ERROR Empty request.");
         return true;
     }
 
     if (line == "__ERROR_LINE_TOO_LONG__") {
-        sendSimple(clientSocket, "ERROR Request line is too long.");
+        sendSimple(conn, "ERROR Request line is too long.");
         return true;
     }
 
     const std::vector<std::string> tokens = Protocol::splitWhitespace(line);
     if (tokens.empty()) {
-        sendSimple(clientSocket, "ERROR Empty request.");
+        sendSimple(conn, "ERROR Empty request.");
         return true;
     }
 
     const std::string command = Protocol::toUpper(tokens[0]);
 
     if (command == "EXIT") {
-        sendSimple(clientSocket, "OK Goodbye.");
+        sendSimple(conn, "OK Goodbye.");
         return false;
     }
 
     if (command == "HELP") {
-        sendHelp(clientSocket);
+        sendHelp(conn);
         return true;
     }
 
     if (command == "LOGIN") {
-        return handleLogin(clientSocket, tokens, isAdmin);
+        return handleLogin(conn, tokens, isAdmin);
     }
 
     if (command == "GET_COURSE") {
-        return handleGetCourse(clientSocket, line);
+        return handleGetCourse(conn, line);
     }
 
     if (command == "QUERY_FILTER") {
-        return handleQueryFilter(clientSocket, line);
+        return handleQueryFilter(conn, line);
     }
 
     if (command == "QUERY_CODE") {
         if (tokens.size() != 2) {
-            sendSimple(clientSocket, "ERROR Usage: QUERY_CODE CourseCode.");
+            sendSimple(conn, "ERROR Usage: QUERY_CODE CourseCode.");
             return true;
         }
-        sendResult(clientSocket, g_database.queryByCode(tokens[1]));
+        sendResult(conn, g_database.queryByCode(tokens[1]));
         return true;
     }
 
     if (command == "QUERY_INSTRUCTOR") {
         const std::string instructor = Protocol::removeCommand(line);
         if (instructor.empty()) {
-            sendSimple(clientSocket, "ERROR Usage: QUERY_INSTRUCTOR InstructorName.");
+            sendSimple(conn, "ERROR Usage: QUERY_INSTRUCTOR InstructorName.");
             return true;
         }
-        sendResult(clientSocket, g_database.queryByInstructor(instructor));
+        sendResult(conn, g_database.queryByInstructor(instructor));
         return true;
     }
 
     if (command == "QUERY_SEMESTER") {
         if (tokens.size() != 2) {
-            sendSimple(clientSocket, "ERROR Usage: QUERY_SEMESTER Semester.");
+            sendSimple(conn, "ERROR Usage: QUERY_SEMESTER Semester.");
             return true;
         }
-        sendResult(clientSocket, g_database.queryBySemester(tokens[1]));
+        sendResult(conn, g_database.queryBySemester(tokens[1]));
         return true;
     }
 
@@ -349,26 +373,26 @@ bool handleClientCommand(SOCKET clientSocket, const std::string& rawLine, bool& 
         std::string end;
         std::string error;
         if (!parseTimeQuery(Protocol::removeCommand(line), day, start, end, error)) {
-            sendSimple(clientSocket, error);
+            sendSimple(conn, error);
             return true;
         }
-        sendResult(clientSocket, g_database.queryByTimeSlot(day, start, end));
+        sendResult(conn, g_database.queryByTimeSlot(day, start, end));
         return true;
     }
 
     if (command == "ADD") {
-        return handleAdd(clientSocket, line, isAdmin);
+        return handleAdd(conn, line, isAdmin);
     }
 
     if (command == "UPDATE") {
-        return handleUpdate(clientSocket, line, isAdmin);
+        return handleUpdate(conn, line, isAdmin);
     }
 
     if (command == "DELETE") {
-        return handleDelete(clientSocket, tokens, isAdmin);
+        return handleDelete(conn, tokens, isAdmin);
     }
 
-    sendSimple(clientSocket, "ERROR Unknown command. Type HELP for command list.");
+    sendSimple(conn, "ERROR Unknown command. Type HELP for command list.");
     return true;
 }
 
@@ -377,12 +401,37 @@ void handleClient(SOCKET clientSocket, sockaddr_in clientAddress) {
     ++g_activeClients;
     logMessage("[CONNECT] " + endpoint + " active=" + std::to_string(g_activeClients.load()));
 
+    ClientConn conn;
+    conn.socket = clientSocket;
+
     bool isAdmin = false;
     Protocol::sendLine(clientSocket, "OK Course Timetable Server Ready. Type HELP for commands.");
 
-    std::string line;
-    while (Protocol::recvLine(clientSocket, line)) {
-        if (!handleClientCommand(clientSocket, line, isAdmin)) {
+    std::string raw;
+    while (true) {
+        if (conn.secure) {
+            if (!SecureChannel::recvSecureFrame(conn.socket, conn.aesKey, raw)) {
+                break;
+            }
+        } else {
+            if (!Protocol::recvLine(conn.socket, raw)) {
+                break;
+            }
+        }
+
+        const std::string trimmed = Protocol::trim(raw);
+        if (!conn.secure && Protocol::startsWithIgnoreCase(trimmed, "SECURE_V1")) {
+            std::string err;
+            if (SecureChannel::serverHandshakeFromLine(conn.socket, trimmed, g_securePsk, conn.aesKey, err)) {
+                conn.secure = true;
+                logMessage("[SECURE] " + endpoint + " AES-GCM session established.");
+                continue;
+            }
+            Protocol::sendLine(conn.socket, err);
+            continue;
+        }
+
+        if (!handleClientCommand(conn, raw, isAdmin)) {
             break;
         }
     }
@@ -396,17 +445,42 @@ void handleClient(SOCKET clientSocket, sockaddr_in clientAddress) {
 
 int main(int argc, char* argv[]) {
     int port = Protocol::DEFAULT_PORT;
-    if (argc >= 2) {
-        try {
-            port = std::stoi(argv[1]);
-        } catch (...) {
-            std::cerr << "Invalid port number." << std::endl;
-            return 1;
+    g_securePsk.clear();
+
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "--secure") {
+            if (i + 1 >= argc) {
+                std::cerr << "Missing shared secret after --secure." << std::endl;
+                return 1;
+            }
+            g_securePsk = argv[++i];
+            continue;
         }
-        if (port <= 0 || port > 65535) {
-            std::cerr << "Port must be between 1 and 65535." << std::endl;
-            return 1;
+
+        bool digitsOnly = !arg.empty();
+        for (char ch : arg) {
+            if (!std::isdigit(static_cast<unsigned char>(ch))) {
+                digitsOnly = false;
+                break;
+            }
         }
+        if (digitsOnly) {
+            try {
+                const int parsed = std::stoi(arg);
+                if (parsed > 0 && parsed <= 65535) {
+                    port = parsed;
+                }
+            } catch (...) {
+                std::cerr << "Invalid port number." << std::endl;
+                return 1;
+            }
+        }
+    }
+
+    if (port <= 0 || port > 65535) {
+        std::cerr << "Port must be between 1 and 65535." << std::endl;
+        return 1;
     }
 
     std::string databaseMessage;
@@ -414,7 +488,7 @@ int main(int argc, char* argv[]) {
         std::cerr << databaseMessage << std::endl;
         return 1;
     }
-    std::cout << "Database" << std::endl;
+    std::cout << databaseMessage << std::endl;
 
     WSADATA wsaData;
     const int startupResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -452,6 +526,10 @@ int main(int argc, char* argv[]) {
     std::cout << "Server listening on port " << port << std::endl;
     std::cout << "Minimum concurrent clients supported: "
               << Protocol::MIN_CONCURRENT_CLIENTS << std::endl;
+    if (!g_securePsk.empty()) {
+        std::cout << "Secure sessions: enabled (AES-256-GCM + PSK). Clients send SECURE_V1 after the greeting."
+                  << std::endl;
+    }
 
     while (true) {
         sockaddr_in clientAddress = {};

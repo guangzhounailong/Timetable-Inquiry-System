@@ -7,48 +7,23 @@
 #include <windows.h>
 
 #include "Protocol.h"
+#include "SecureChannel.h"
 
+#include <cstdint>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #pragma comment(lib, "Ws2_32.lib")
 
 namespace {
 
-constexpr WORD DEFAULT_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-constexpr WORD RED_COLOR = FOREGROUND_RED | FOREGROUND_INTENSITY;
-constexpr WORD YELLOW_COLOR = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-
-bool g_actionOutputYellow = false;
-
-HANDLE consoleOutput() {
-    return GetStdHandle(STD_OUTPUT_HANDLE);
-}
-
-void setConsoleColor(WORD attributes) {
-    SetConsoleTextAttribute(consoleOutput(), attributes);
-}
-
-void resetConsoleColor() {
-    setConsoleColor(DEFAULT_COLOR);
-}
-
-void beginActionOutput() {
-    g_actionOutputYellow = true;
-    setConsoleColor(YELLOW_COLOR);
-}
-
-void endActionOutput() {
-    g_actionOutputYellow = false;
-    resetConsoleColor();
-}
-
-void printColor(const std::string& text, WORD color) {
-    setConsoleColor(color);
-    std::cout << text;
-    resetConsoleColor();
-}
+struct Session {
+    SOCKET socket = INVALID_SOCKET;
+    bool secure = false;
+    std::vector<std::uint8_t> aesKey;
+};
 
 bool shouldPauseBeforeExit() {
     DWORD processIds[4] = {};
@@ -66,91 +41,65 @@ void pauseBeforeExitIfNeeded() {
     std::getline(std::cin, ignored);
 }
 
-std::string prompt(const std::string& label, bool highlight = false) {
-    if (highlight || g_actionOutputYellow) {
-        setConsoleColor(YELLOW_COLOR);
-        std::cout << label;
-        if (!g_actionOutputYellow) {
-            resetConsoleColor();
-        }
-    } else {
-        std::cout << label;
-    }
+std::string prompt(const std::string& label) {
+    std::cout << label;
     std::string value;
     std::getline(std::cin, value);
     return Protocol::trim(value);
 }
 
-std::string promptRequired(const std::string& label, bool highlight = false) {
+std::string promptRequired(const std::string& label) {
     while (true) {
-        std::string value = prompt(label, highlight);
+        std::string value = prompt(label);
         if (!value.empty()) {
             return value;
-        }
-        if (g_actionOutputYellow) {
-            setConsoleColor(YELLOW_COLOR);
         }
         std::cout << "Value cannot be empty." << std::endl;
     }
 }
 
-void printStartupTitle() {
-    std::cout << u8"██████╗  ██████╗███╗   ██╗\n"
-              << u8"██╔══██╗██╔════╝████╗  ██║\n"
-              << u8"██║  ██║██║     ██╔██╗ ██║\n"
-              << u8"██║  ██║██║     ██║╚██╗██║\n"
-              << u8"██████╔╝╚██████╗██║ ╚████║\n"
-              << u8"╚═════╝  ╚═════╝╚═╝  ╚═══╝\n\n"
-              << "Course Timetable Inquiry System\n\n";
-}
-
-void printStartupGreeting(const std::string& greeting) {
-    const std::string readyPrefix = "OK Course Timetable Server Ready.";
-    if (Protocol::startsWithIgnoreCase(greeting, readyPrefix)) {
-        std::string helpText = Protocol::trim(greeting.substr(readyPrefix.size()));
-        if (helpText.empty()) {
-            helpText = "Type HELP for commands.";
-        }
-        std::cout << helpText << std::endl;
-        return;
-    }
-
-    std::cout << greeting << std::endl;
-}
-
-bool readStartupGreeting(SOCKET serverSocket, std::string& greeting) {
-    greeting.clear();
-    if (!Protocol::recvLine(serverSocket, greeting)) {
-        std::cout << "Server disconnected." << std::endl;
-        return false;
-    }
-
-    printStartupTitle();
-    printStartupGreeting(greeting);
-    return true;
-}
-
-bool readResponse(SOCKET serverSocket, std::string& firstLine) {
+bool readResponse(Session& session, std::string& firstLine) {
     firstLine.clear();
-    std::string line;
-    if (!Protocol::recvLine(serverSocket, line)) {
-        if (g_actionOutputYellow) {
-            setConsoleColor(YELLOW_COLOR);
+
+    if (session.secure) {
+        std::string block;
+        if (!SecureChannel::recvSecureFrame(session.socket, session.aesKey, block)) {
+            std::cout << "Server disconnected." << std::endl;
+            return false;
         }
+        std::istringstream input(block);
+        std::getline(input, firstLine);
+        if (!firstLine.empty() && firstLine.back() == '\r') {
+            firstLine.pop_back();
+        }
+        std::cout << firstLine << std::endl;
+
+        if (Protocol::startsWithIgnoreCase(firstLine, "RESULT ")) {
+            std::string line;
+            while (std::getline(input, line)) {
+                if (!line.empty() && line.back() == '\r') {
+                    line.pop_back();
+                }
+                if (line == "END") {
+                    break;
+                }
+                std::cout << line << std::endl;
+            }
+        }
+        return true;
+    }
+
+    std::string line;
+    if (!Protocol::recvLine(session.socket, line)) {
         std::cout << "Server disconnected." << std::endl;
         return false;
     }
 
     firstLine = line;
-    const bool isResult = Protocol::startsWithIgnoreCase(line, "RESULT");
-    if (isResult || g_actionOutputYellow) {
-        setConsoleColor(YELLOW_COLOR);
-    }
-
     std::cout << line << std::endl;
 
-    if (isResult) {
-        while (Protocol::recvLine(serverSocket, line)) {
+    if (Protocol::startsWithIgnoreCase(line, "RESULT ")) {
+        while (Protocol::recvLine(session.socket, line)) {
             if (line == "END") {
                 break;
             }
@@ -158,29 +107,26 @@ bool readResponse(SOCKET serverSocket, std::string& firstLine) {
         }
     }
 
-    if (!g_actionOutputYellow) {
-        resetConsoleColor();
-    }
-
     return true;
 }
 
-bool sendCommand(SOCKET serverSocket, const std::string& command, std::string& firstLine) {
-    if (!Protocol::sendLine(serverSocket, command)) {
-        if (g_actionOutputYellow) {
-            setConsoleColor(YELLOW_COLOR);
+bool sendCommand(Session& session, const std::string& command, std::string& firstLine) {
+    if (session.secure) {
+        if (!SecureChannel::sendSecureFrame(session.socket, session.aesKey, command + "\n")) {
+            std::cout << "Failed to send request to server." << std::endl;
+            return false;
         }
-        std::cout << "Failed to send request to server." << std::endl;
-        return false;
+    } else {
+        if (!Protocol::sendLine(session.socket, command)) {
+            std::cout << "Failed to send request to server." << std::endl;
+            return false;
+        }
     }
-    return readResponse(serverSocket, firstLine);
+    return readResponse(session, firstLine);
 }
 
 void printMenu(bool isAdmin) {
-    resetConsoleColor();
-    std::cout << "\n===== ";
-    printColor("Inquiry Options", RED_COLOR);
-    std::cout << " =====\n"
+    std::cout << "\n===== Course Timetable Inquiry System =====\n"
               << "1. Query by course code\n"
               << "2. Query by instructor\n"
               << "3. Query by semester\n"
@@ -195,41 +141,40 @@ void printMenu(bool isAdmin) {
 
     std::cout << "9. Send raw protocol command\n"
               << "0. Exit\n"
-              << "===========================\n";
-    printColor("Choose: ", YELLOW_COLOR);
+              << "Choose: ";
 }
 
-bool queryByCode(SOCKET serverSocket) {
-    const std::string code = promptRequired("Course code (example COMP3003): ", true);
+bool queryByCode(Session& session) {
+    const std::string code = promptRequired("Course code (example COMP3003): ");
     std::string response;
-    return sendCommand(serverSocket, "QUERY_CODE " + code, response);
+    return sendCommand(session, "QUERY_CODE " + code, response);
 }
 
-bool queryByInstructor(SOCKET serverSocket) {
-    const std::string instructor = promptRequired("Instructor name or keyword: ", true);
+bool queryByInstructor(Session& session) {
+    const std::string instructor = promptRequired("Instructor name or keyword: ");
     std::string response;
-    return sendCommand(serverSocket, "QUERY_INSTRUCTOR " + instructor, response);
+    return sendCommand(session, "QUERY_INSTRUCTOR " + instructor, response);
 }
 
-bool queryBySemester(SOCKET serverSocket) {
-    const std::string semester = promptRequired("Semester (example 2026S): ", true);
+bool queryBySemester(Session& session) {
+    const std::string semester = promptRequired("Semester (example 2026S): ");
     std::string response;
-    return sendCommand(serverSocket, "QUERY_SEMESTER " + semester, response);
+    return sendCommand(session, "QUERY_SEMESTER " + semester, response);
 }
 
-bool queryByTimeSlot(SOCKET serverSocket) {
-    const std::string day = promptRequired("Day (example Mon): ", true);
-    const std::string start = promptRequired("Start time HH:MM: ", true);
-    const std::string end = promptRequired("End time HH:MM: ", true);
+bool queryByTimeSlot(Session& session) {
+    const std::string day = promptRequired("Day (example Mon): ");
+    const std::string start = promptRequired("Start time HH:MM: ");
+    const std::string end = promptRequired("End time HH:MM: ");
     std::string response;
-    return sendCommand(serverSocket, "QUERY_TIME " + day + " " + start + " " + end, response);
+    return sendCommand(session, "QUERY_TIME " + day + " " + start + " " + end, response);
 }
 
-bool adminLogin(SOCKET serverSocket, bool& isAdmin) {
+bool adminLogin(Session& session, bool& isAdmin) {
     const std::string username = promptRequired("Username: ");
     const std::string password = promptRequired("Password: ");
     std::string response;
-    if (!sendCommand(serverSocket, "LOGIN " + username + " " + password, response)) {
+    if (!sendCommand(session, "LOGIN " + username + " " + password, response)) {
         return false;
     }
 
@@ -239,7 +184,7 @@ bool adminLogin(SOCKET serverSocket, bool& isAdmin) {
     return true;
 }
 
-bool addCourse(SOCKET serverSocket) {
+bool addCourse(Session& session) {
     std::cout << "Enter new course information." << std::endl;
     const std::string code = promptRequired("CourseCode: ");
     const std::string title = promptRequired("CourseTitle: ");
@@ -255,10 +200,10 @@ bool addCourse(SOCKET serverSocket) {
                                 instructor + "|" + day + "|" + start + "|" + end + "|" +
                                 classroom + "|" + semester;
     std::string response;
-    return sendCommand(serverSocket, command, response);
+    return sendCommand(session, command, response);
 }
 
-bool updateCourse(SOCKET serverSocket) {
+bool updateCourse(Session& session) {
     const std::string code = promptRequired("CourseCode: ");
     const std::string section = promptRequired("Section: ");
     std::cout << "Fields: CourseTitle, Instructor, Day, StartTime, EndTime, Time, Classroom, Semester" << std::endl;
@@ -267,20 +212,20 @@ bool updateCourse(SOCKET serverSocket) {
 
     const std::string command = "UPDATE " + code + " " + section + " " + field + " " + value;
     std::string response;
-    return sendCommand(serverSocket, command, response);
+    return sendCommand(session, command, response);
 }
 
-bool deleteCourse(SOCKET serverSocket) {
+bool deleteCourse(Session& session) {
     const std::string code = promptRequired("CourseCode: ");
     const std::string section = promptRequired("Section: ");
     std::string response;
-    return sendCommand(serverSocket, "DELETE " + code + " " + section, response);
+    return sendCommand(session, "DELETE " + code + " " + section, response);
 }
 
-bool rawCommand(SOCKET serverSocket) {
+bool rawCommand(Session& session) {
     const std::string command = promptRequired("Protocol command: ");
     std::string response;
-    return sendCommand(serverSocket, command, response);
+    return sendCommand(session, command, response);
 }
 
 SOCKET connectToServer(const std::string& host, int port) {
@@ -313,18 +258,32 @@ SOCKET connectToServer(const std::string& host, int port) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
-    SetConsoleOutputCP(CP_UTF8);
-
     int exitCode = 0;
     std::string host = "127.0.0.1";
     int port = Protocol::DEFAULT_PORT;
+    std::string securePsk;
 
-    if (argc >= 2) {
-        host = argv[1];
+    std::vector<std::string> positional;
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "--secure") {
+            if (i + 1 >= argc) {
+                std::cout << "Missing shared secret after --secure." << std::endl;
+                pauseBeforeExitIfNeeded();
+                return 1;
+            }
+            securePsk = argv[++i];
+            continue;
+        }
+        positional.push_back(arg);
     }
-    if (argc >= 3) {
+
+    if (positional.size() >= 1) {
+        host = positional[0];
+    }
+    if (positional.size() >= 2) {
         try {
-            port = std::stoi(argv[2]);
+            port = std::stoi(positional[1]);
         } catch (...) {
             std::cout << "Invalid port number." << std::endl;
             pauseBeforeExitIfNeeded();
@@ -345,19 +304,33 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    SOCKET serverSocket = connectToServer(host, port);
-    if (serverSocket == INVALID_SOCKET) {
+    Session session;
+    session.socket = connectToServer(host, port);
+    if (session.socket == INVALID_SOCKET) {
         WSACleanup();
         pauseBeforeExitIfNeeded();
         return 1;
     }
 
     std::string greeting;
-    if (!readStartupGreeting(serverSocket, greeting)) {
-        closesocket(serverSocket);
+    if (!readResponse(session, greeting)) {
+        closesocket(session.socket);
         WSACleanup();
         pauseBeforeExitIfNeeded();
         return 1;
+    }
+
+    if (!securePsk.empty()) {
+        std::string error;
+        if (!SecureChannel::clientHandshake(session.socket, securePsk, session.aesKey, error)) {
+            std::cout << error << std::endl;
+            closesocket(session.socket);
+            WSACleanup();
+            pauseBeforeExitIfNeeded();
+            return 1;
+        }
+        session.secure = true;
+        std::cout << "Encrypted session active (AES-256-GCM)." << std::endl;
     }
 
     bool isAdmin = false;
@@ -369,41 +342,39 @@ int main(int argc, char* argv[]) {
         std::getline(std::cin, choice);
         choice = Protocol::trim(choice);
 
-        beginActionOutput();
         bool ok = true;
         if (choice == "1") {
-            ok = queryByCode(serverSocket);
+            ok = queryByCode(session);
         } else if (choice == "2") {
-            ok = queryByInstructor(serverSocket);
+            ok = queryByInstructor(session);
         } else if (choice == "3") {
-            ok = queryBySemester(serverSocket);
+            ok = queryBySemester(session);
         } else if (choice == "4") {
-            ok = queryByTimeSlot(serverSocket);
+            ok = queryByTimeSlot(session);
         } else if (choice == "5") {
-            ok = adminLogin(serverSocket, isAdmin);
+            ok = adminLogin(session, isAdmin);
         } else if (choice == "6" && isAdmin) {
-            ok = addCourse(serverSocket);
+            ok = addCourse(session);
         } else if (choice == "7" && isAdmin) {
-            ok = updateCourse(serverSocket);
+            ok = updateCourse(session);
         } else if (choice == "8" && isAdmin) {
-            ok = deleteCourse(serverSocket);
+            ok = deleteCourse(session);
         } else if (choice == "9") {
-            ok = rawCommand(serverSocket);
+            ok = rawCommand(session);
         } else if (choice == "0") {
             std::string response;
-            ok = sendCommand(serverSocket, "EXIT", response);
+            ok = sendCommand(session, "EXIT", response);
             running = false;
         } else {
             std::cout << "Invalid menu choice." << std::endl;
         }
 
-        endActionOutput();
         if (!ok) {
             running = false;
         }
     }
 
-    closesocket(serverSocket);
+    closesocket(session.socket);
     WSACleanup();
     pauseBeforeExitIfNeeded();
     return exitCode;

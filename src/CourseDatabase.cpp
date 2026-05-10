@@ -261,6 +261,17 @@ CourseDatabase::CourseDatabase(std::string filePath)
     : filePath_(std::move(filePath)) {
 }
 
+void CourseDatabase::clearQueryCacheUnlocked() const {
+    queryCache_.clear();
+}
+
+void CourseDatabase::putQueryCacheUnlocked(const std::string& key, std::vector<Course> value) const {
+    if (queryCache_.size() >= kMaxQueryCacheEntries) {
+        queryCache_.clear();
+    }
+    queryCache_.insert_or_assign(key, std::move(value));
+}
+
 bool CourseDatabase::load(std::string& message) {
     std::lock_guard<std::mutex> lock(mutex_);
     return loadUnlocked(message);
@@ -268,6 +279,7 @@ bool CourseDatabase::load(std::string& message) {
 
 bool CourseDatabase::loadUnlocked(std::string& message) {
     courses_.clear();
+    clearQueryCacheUnlocked();
 
     std::ifstream input(filePath_);
     if (!input) {
@@ -385,6 +397,7 @@ bool CourseDatabase::addCourse(const Course& course, std::string& message) {
         return false;
     }
 
+    clearQueryCacheUnlocked();
     message = "OK Course added.";
     return true;
 }
@@ -410,6 +423,7 @@ bool CourseDatabase::updateCourse(const std::string& courseCode,
             if (!saveUnlocked(message)) {
                 return false;
             }
+            clearQueryCacheUnlocked();
             message = "OK Course updated.";
             return true;
         }
@@ -453,6 +467,7 @@ bool CourseDatabase::updateCourseByCodeIfUnique(const std::string& courseCode,
         return false;
     }
 
+    clearQueryCacheUnlocked();
     message = "OK Course updated.";
     return true;
 }
@@ -481,6 +496,7 @@ bool CourseDatabase::deleteCourse(const std::string& courseCode,
         return false;
     }
 
+    clearQueryCacheUnlocked();
     message = "OK Course deleted.";
     return true;
 }
@@ -510,40 +526,61 @@ bool CourseDatabase::findCourse(const std::string& courseCode,
 
 std::vector<Course> CourseDatabase::queryByCode(const std::string& courseCode) const {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::vector<Course> results;
     const std::string targetCode = normalizedCode(courseCode);
+    const std::string cacheKey = std::string("CODE|") + targetCode;
 
+    const auto cached = queryCache_.find(cacheKey);
+    if (cached != queryCache_.end()) {
+        return cached->second;
+    }
+
+    std::vector<Course> results;
     for (const Course& course : courses_) {
         if (normalizedCode(course.courseCode) == targetCode) {
             results.push_back(course);
         }
     }
+    putQueryCacheUnlocked(cacheKey, results);
     return results;
 }
 
 std::vector<Course> CourseDatabase::queryByInstructor(const std::string& instructor) const {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::vector<Course> results;
     const std::string term = Protocol::trim(instructor);
+    const std::string cacheKey = std::string("INST|") + Protocol::toUpper(term);
 
+    const auto cached = queryCache_.find(cacheKey);
+    if (cached != queryCache_.end()) {
+        return cached->second;
+    }
+
+    std::vector<Course> results;
     for (const Course& course : courses_) {
         if (containsIgnoreCase(course.instructor, term)) {
             results.push_back(course);
         }
     }
+    putQueryCacheUnlocked(cacheKey, results);
     return results;
 }
 
 std::vector<Course> CourseDatabase::queryBySemester(const std::string& semester) const {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::vector<Course> results;
     const std::string targetSemester = Protocol::toUpper(Protocol::trim(semester));
+    const std::string cacheKey = std::string("SEM|") + targetSemester;
 
+    const auto cached = queryCache_.find(cacheKey);
+    if (cached != queryCache_.end()) {
+        return cached->second;
+    }
+
+    std::vector<Course> results;
     for (const Course& course : courses_) {
         if (Protocol::toUpper(Protocol::trim(course.semester)) == targetSemester) {
             results.push_back(course);
         }
     }
+    putQueryCacheUnlocked(cacheKey, results);
     return results;
 }
 
@@ -551,15 +588,23 @@ std::vector<Course> CourseDatabase::queryByTimeSlot(const std::string& day,
                                                     const std::string& startTime,
                                                     const std::string& endTime) const {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::vector<Course> results;
     const std::string targetDay = normalizedDay(day);
+    const std::string cacheKey =
+        std::string("TIME|") + targetDay + '|' + startTime + '|' + endTime;
 
+    const auto cached = queryCache_.find(cacheKey);
+    if (cached != queryCache_.end()) {
+        return cached->second;
+    }
+
+    std::vector<Course> results;
     for (const Course& course : courses_) {
         if (normalizedDay(course.day) == targetDay &&
             timeSlotsOverlap(course.startTime, course.endTime, startTime, endTime)) {
             results.push_back(course);
         }
     }
+    putQueryCacheUnlocked(cacheKey, results);
     return results;
 }
 
@@ -570,7 +615,6 @@ std::vector<Course> CourseDatabase::queryByFilters(const std::string& courseCode
                                                    const std::string& startTime,
                                                    const std::string& endTime) const {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::vector<Course> results;
 
     const std::string codeTerm = Protocol::trim(courseCode);
     const std::string instructorTerm = Protocol::trim(instructor);
@@ -586,6 +630,15 @@ std::vector<Course> CourseDatabase::queryByFilters(const std::string& courseCode
     const bool useStart = targetStart >= 0;
     const bool useEnd = targetEnd >= 0;
 
+    const std::string cacheKey = std::string("FILT|") + codeTerm + '\x1f' + instructorTerm + '\x1f' +
+                                 targetSemester + '\x1f' + targetDay + '\x1f' + startTime + '\x1f' +
+                                 endTime;
+    const auto cached = queryCache_.find(cacheKey);
+    if (cached != queryCache_.end()) {
+        return cached->second;
+    }
+
+    std::vector<Course> results;
     for (const Course& course : courses_) {
         if (useCode && !containsIgnoreCase(course.courseCode, codeTerm)) {
             continue;
@@ -623,6 +676,7 @@ std::vector<Course> CourseDatabase::queryByFilters(const std::string& courseCode
         results.push_back(course);
     }
 
+    putQueryCacheUnlocked(cacheKey, results);
     return results;
 }
 
