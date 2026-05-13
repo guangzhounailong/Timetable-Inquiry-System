@@ -52,7 +52,7 @@ rc /nologo ^
     "%SRC_DIR%\wx_client.rc"
 if errorlevel 1 exit /b 1
 
-cl /EHsc /std:c++17 /utf-8 /MD /D__WXMSW__ /D_UNICODE /DUNICODE ^
+cl /EHsc /std:c++17 /utf-8 /O2 /DNDEBUG /MD /D__WXMSW__ /D_UNICODE /DUNICODE ^
     /I"%INCLUDE_DIR%" /I"%WXWIN%\include" /I"%WX_SETUP_DIR%" ^
     "%SRC_DIR%\wx_client.cpp" "%SRC_DIR%\SecureChannel.cpp" /Fo"%BUILD_DIR%\\" /Fe"%BIN_DIR%\wx_client.exe" ^
     /link /SUBSYSTEM:WINDOWS /LIBPATH:"%WX_LIB_DIR%" ^

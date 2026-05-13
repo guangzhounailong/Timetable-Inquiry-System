@@ -25,7 +25,9 @@
 #include <wx/textctrl.h>
 #include <wx/wx.h>
 
+#include <algorithm>
 #include <atomic>
+#include <cctype>
 #include <cstdint>
 #include <mutex>
 #include <sstream>
@@ -72,12 +74,174 @@ struct CourseRow {
     std::string semester;
 };
 
+class CourseGridTable final : public wxGridTableBase {
+public:
+    int GetNumberRows() override {
+        return static_cast<int>(rows_.size());
+    }
+
+    int GetNumberCols() override {
+        return 9;
+    }
+
+    bool IsEmptyCell(int row, int col) override {
+        return GetValue(row, col).empty();
+    }
+
+    wxString GetValue(int row, int col) override {
+        if (row < 0 || col < 0 ||
+            row >= static_cast<int>(rows_.size()) || col >= GetNumberCols()) {
+            return "";
+        }
+
+        const CourseRow& course = rows_[static_cast<std::size_t>(row)];
+        switch (col) {
+            case 0:
+                return wxString::FromUTF8(course.code.c_str());
+            case 1:
+                return wxString::FromUTF8(course.title.c_str());
+            case 2:
+                return wxString::FromUTF8(course.section.c_str());
+            case 3:
+                return wxString::FromUTF8(course.instructor.c_str());
+            case 4:
+                return wxString::FromUTF8(course.day.c_str());
+            case 5:
+                return wxString::FromUTF8(course.start.c_str());
+            case 6:
+                return wxString::FromUTF8(course.end.c_str());
+            case 7:
+                return wxString::FromUTF8(course.classroom.c_str());
+            case 8:
+                return wxString::FromUTF8(course.semester.c_str());
+            default:
+                return "";
+        }
+    }
+
+    void SetValue(int, int, const wxString&) override {
+    }
+
+    wxString GetColLabelValue(int col) override {
+        static const char* labels[] = {
+            "Code", "Title", "Section", "Instructor", "Day",
+            "Start", "End", "Classroom", "Semester"
+        };
+        if (col < 0 || col >= GetNumberCols()) {
+            return "";
+        }
+        return labels[col];
+    }
+
+    void SetRows(std::vector<CourseRow> rows) {
+        rows_ = std::move(rows);
+    }
+
+private:
+    std::vector<CourseRow> rows_;
+};
+
+const wxColour kCanvas(255, 255, 255);
+const wxColour kSurfaceSoft(244, 244, 244);
+const wxColour kSurfaceCard(255, 255, 255);
+const wxColour kSurfaceDark(23, 26, 32);
+const wxColour kSurfaceDarkElevated(57, 60, 65);
+const wxColour kPrimary(62, 106, 225);
+const wxColour kPrimaryActive(47, 84, 189);
+const wxColour kInk(23, 26, 32);
+const wxColour kBody(57, 60, 65);
+const wxColour kMuted(92, 94, 98);
+const wxColour kHairline(238, 238, 238);
+const wxColour kOnDark(255, 255, 255);
+const wxColour kOnDarkSoft(208, 209, 210);
+const wxColour kSuccess(32, 126, 79);
+const wxColour kError(182, 43, 43);
+
 std::string wxToStd(const wxString& value) {
     return std::string(value.mb_str());
 }
 
 wxString stdToWx(const std::string& value) {
     return wxString::FromUTF8(value.c_str());
+}
+
+wxFont bodyFont(int pointSize = 10, wxFontWeight weight = wxFONTWEIGHT_NORMAL) {
+    return wxFont(pointSize,
+                  wxFONTFAMILY_SWISS,
+                  wxFONTSTYLE_NORMAL,
+                  weight,
+                  false,
+                  "Segoe UI");
+}
+
+wxFont displayFont(int pointSize = 18, wxFontWeight weight = wxFONTWEIGHT_MEDIUM) {
+    return wxFont(pointSize,
+                  wxFONTFAMILY_SWISS,
+                  wxFONTSTYLE_NORMAL,
+                  weight,
+                  false,
+                  "Segoe UI");
+}
+
+void stylePanel(wxWindow* window, const wxColour& background = kCanvas) {
+    if (window == nullptr) {
+        return;
+    }
+    window->SetBackgroundColour(background);
+    window->SetForegroundColour(kInk);
+    window->SetFont(bodyFont());
+    window->SetDoubleBuffered(true);
+}
+
+void styleTextCtrl(wxTextCtrl* control, bool dark = false) {
+    if (control == nullptr) {
+        return;
+    }
+    control->SetBackgroundColour(dark ? kSurfaceDarkElevated : kSurfaceSoft);
+    control->SetForegroundColour(dark ? kOnDark : kInk);
+    control->SetFont(dark ? wxFont(9,
+                                   wxFONTFAMILY_TELETYPE,
+                                   wxFONTSTYLE_NORMAL,
+                                   wxFONTWEIGHT_NORMAL,
+                                   false,
+                                   "Consolas")
+                          : bodyFont());
+}
+
+void styleChoice(wxChoice* choice) {
+    if (choice == nullptr) {
+        return;
+    }
+    choice->SetBackgroundColour(kSurfaceSoft);
+    choice->SetForegroundColour(kInk);
+    choice->SetFont(bodyFont());
+}
+
+void styleButton(wxButton* button, bool primary = false, bool darkSurface = false) {
+    if (button == nullptr) {
+        return;
+    }
+    button->SetFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
+    button->SetMinSize(wxSize(primary ? 124 : 96, 34));
+    if (primary) {
+        button->SetBackgroundColour(kPrimary);
+        button->SetForegroundColour(*wxWHITE);
+    } else if (darkSurface) {
+        button->SetBackgroundColour(kSurfaceDarkElevated);
+        button->SetForegroundColour(kOnDark);
+    } else {
+        button->SetBackgroundColour(kSurfaceSoft);
+        button->SetForegroundColour(kInk);
+    }
+}
+
+void styleStaticBox(wxStaticBoxSizer* sizer, bool dark = false) {
+    if (sizer == nullptr || sizer->GetStaticBox() == nullptr) {
+        return;
+    }
+    sizer->GetStaticBox()->SetBackgroundColour(dark ? kSurfaceDark : kCanvas);
+    sizer->GetStaticBox()->SetForegroundColour(dark ? kOnDark : kBody);
+    sizer->GetStaticBox()->SetFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
 }
 
 bool parseCoursePayloadRow(const std::string& line, CourseRow& row) {
@@ -98,6 +262,87 @@ bool parseCoursePayloadRow(const std::string& line, CourseRow& row) {
     return true;
 }
 
+bool isTimeToken(const std::string& value) {
+    return value.size() == 5 &&
+           std::isdigit(static_cast<unsigned char>(value[0])) &&
+           std::isdigit(static_cast<unsigned char>(value[1])) &&
+           value[2] == ':' &&
+           std::isdigit(static_cast<unsigned char>(value[3])) &&
+           std::isdigit(static_cast<unsigned char>(value[4]));
+}
+
+bool isDayToken(const std::string& value) {
+    const std::string day = Protocol::toUpper(Protocol::trim(value));
+    return day == "MON" || day == "TUE" || day == "WED" || day == "THU" ||
+           day == "FRI" || day == "SAT" || day == "SUN";
+}
+
+std::string joinTokens(const std::vector<std::string>& tokens,
+                       std::size_t first,
+                       std::size_t lastExclusive) {
+    std::ostringstream output;
+    for (std::size_t index = first; index < lastExclusive; ++index) {
+        if (index > first) {
+            output << ' ';
+        }
+        output << tokens[index];
+    }
+    return output.str();
+}
+
+bool parseWhitespaceCourseRow(const std::string& line, CourseRow& row) {
+    const std::vector<std::string> tokens = Protocol::splitWhitespace(line);
+    if (tokens.size() < 9) {
+        return false;
+    }
+
+    std::size_t dayIndex = tokens.size();
+    for (std::size_t index = 2; index < tokens.size(); ++index) {
+        if (isDayToken(tokens[index]) &&
+            index + 4 < tokens.size() &&
+            isTimeToken(tokens[index + 1]) &&
+            isTimeToken(tokens[index + 2])) {
+            dayIndex = index;
+            break;
+        }
+    }
+    if (dayIndex == tokens.size()) {
+        return false;
+    }
+
+    std::size_t sectionIndex = tokens.size();
+    for (std::size_t index = 1; index < dayIndex; ++index) {
+        if (tokens[index].size() == 1) {
+            sectionIndex = index;
+            break;
+        }
+    }
+    if (sectionIndex == tokens.size()) {
+        for (std::size_t index = 2; index < dayIndex; ++index) {
+            if (tokens[index].size() <= 3) {
+                sectionIndex = index;
+                break;
+            }
+        }
+    }
+    if (sectionIndex == tokens.size() ||
+        sectionIndex == 1 ||
+        sectionIndex + 1 >= dayIndex) {
+        return false;
+    }
+
+    row.code = tokens[0];
+    row.title = joinTokens(tokens, 1, sectionIndex);
+    row.section = tokens[sectionIndex];
+    row.instructor = joinTokens(tokens, sectionIndex + 1, dayIndex);
+    row.day = tokens[dayIndex];
+    row.start = tokens[dayIndex + 1];
+    row.end = tokens[dayIndex + 2];
+    row.classroom = tokens[dayIndex + 3];
+    row.semester = tokens[dayIndex + 4];
+    return !row.title.empty() && !row.instructor.empty();
+}
+
 std::vector<CourseRow> parseCourseRows(const ServerResponse& response) {
     std::vector<CourseRow> rows;
     if (!Protocol::startsWithIgnoreCase(response.firstLine, "RESULT ")) {
@@ -113,7 +358,7 @@ std::vector<CourseRow> parseCourseRows(const ServerResponse& response) {
         }
 
         CourseRow row;
-        if (parseCoursePayloadRow(trimmed, row)) {
+        if (parseCoursePayloadRow(trimmed, row) || parseWhitespaceCourseRow(trimmed, row)) {
             rows.push_back(row);
         }
     }
@@ -309,9 +554,9 @@ public:
     MainFrame()
         : wxFrame(nullptr,
                   wxID_ANY,
-                  "Course Timetable GUI Client",
+                  "Course Timetable Inquiry System",
                   wxDefaultPosition,
-                  wxSize(1180, 720)) {
+                  wxSize(1320, 780)) {
         BuildMenu();
         BuildLayout();
         BindEvents();
@@ -343,33 +588,72 @@ private:
 
     void BuildLayout() {
         wxPanel* root = new wxPanel(this);
+        stylePanel(root, kCanvas);
         wxBoxSizer* rootSizer = new wxBoxSizer(wxVERTICAL);
 
-        rootSizer->Add(BuildConnectionBar(root), 0, wxEXPAND | wxALL, 10);
+        rootSizer->Add(BuildHeader(root), 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 16);
+        rootSizer->Add(BuildConnectionBar(root), 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
 
         notebook_ = new wxNotebook(root, wxID_ANY);
-        notebook_->AddPage(BuildQueryPage(notebook_), "Query");
-        notebook_->AddPage(BuildAdminPage(notebook_), "Admin");
+        notebook_->SetBackgroundColour(kCanvas);
+        notebook_->SetForegroundColour(kInk);
+        notebook_->SetFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
+        notebook_->AddPage(BuildQueryPage(notebook_), "Student Query");
+        notebook_->AddPage(BuildAdminPage(notebook_), "Admin Management");
 
-        rootSizer->Add(notebook_, 1, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
-        rootSizer->Add(BuildRawLogPanel(root), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+        rootSizer->Add(notebook_, 1, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
+        rootSizer->Add(BuildRawLogPanel(root), 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP | wxBOTTOM, 10);
         root->SetSizer(rootSizer);
 
         CreateStatusBar();
         SetStatusText("Disconnected");
     }
 
-    wxSizer* BuildConnectionBar(wxWindow* parent) {
+    wxWindow* BuildHeader(wxWindow* parent) {
+        wxPanel* panel = new wxPanel(parent);
+        stylePanel(panel, kCanvas);
+
         wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+        wxBoxSizer* titleSizer = new wxBoxSizer(wxVERTICAL);
+        wxStaticText* title = new wxStaticText(panel, wxID_ANY, "Course Timetable");
+        title->SetFont(displayFont(22));
+        title->SetForegroundColour(kInk);
+        wxStaticText* subtitle = new wxStaticText(panel,
+                                                 wxID_ANY,
+                                                 "Fast inquiry and administration console");
+        subtitle->SetFont(bodyFont(10));
+        subtitle->SetForegroundColour(kMuted);
+        titleSizer->Add(title, 0, wxBOTTOM, 2);
+        titleSizer->Add(subtitle, 0);
+
+        sizer->Add(titleSizer, 0, wxALIGN_CENTER_VERTICAL);
+        sizer->AddStretchSpacer(1);
+
+        wxStaticText* wordmark = new wxStaticText(panel, wxID_ANY, "TIMETABLE");
+        wordmark->SetFont(bodyFont(11, wxFONTWEIGHT_MEDIUM));
+        wordmark->SetForegroundColour(kInk);
+        sizer->Add(wordmark, 0, wxALIGN_CENTER_VERTICAL);
+
+        panel->SetSizer(sizer);
+        return panel;
+    }
+
+    wxSizer* BuildConnectionBar(wxWindow* parent) {
+        wxStaticBoxSizer* sizer = new wxStaticBoxSizer(wxHORIZONTAL, parent, "Connection");
+        styleStaticBox(sizer);
 
         sizer->Add(new wxStaticText(parent, wxID_ANY, "Host"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         hostCtrl_ = new wxTextCtrl(parent, wxID_ANY, "127.0.0.1", wxDefaultPosition, wxSize(150, -1));
+        styleTextCtrl(hostCtrl_);
         sizer->Add(hostCtrl_, 0, wxRIGHT, 12);
 
         sizer->Add(new wxStaticText(parent, wxID_ANY, "Port"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         portCtrl_ = new wxSpinCtrl(parent, wxID_ANY);
         portCtrl_->SetRange(1, 65535);
         portCtrl_->SetValue(Protocol::DEFAULT_PORT);
+        portCtrl_->SetBackgroundColour(kCanvas);
+        portCtrl_->SetForegroundColour(kInk);
+        portCtrl_->SetFont(bodyFont());
         sizer->Add(portCtrl_, 0, wxRIGHT, 12);
 
         sizer->Add(new wxStaticText(parent, wxID_ANY, "PSK"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
@@ -380,18 +664,25 @@ private:
                                   wxSize(180, -1),
                                   wxTE_PASSWORD);
         pskCtrl_->SetHint("optional; AES-GCM if set");
+        styleTextCtrl(pskCtrl_);
         sizer->Add(pskCtrl_, 0, wxRIGHT, 12);
 
         connectButton_ = new wxButton(parent, wxID_ANY, "Connect");
         disconnectButton_ = new wxButton(parent, wxID_ANY, "Disconnect");
+        styleButton(connectButton_, true);
+        styleButton(disconnectButton_);
         sizer->Add(connectButton_, 0, wxRIGHT, 6);
         sizer->Add(disconnectButton_, 0, wxRIGHT, 16);
 
         connectionLabel_ = new wxStaticText(parent, wxID_ANY, "Disconnected");
+        connectionLabel_->SetFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
+        connectionLabel_->SetForegroundColour(kMuted);
         sizer->Add(connectionLabel_, 0, wxALIGN_CENTER_VERTICAL);
         sizer->AddStretchSpacer(1);
 
         loginStateLabel_ = new wxStaticText(parent, wxID_ANY, "Role: Student");
+        loginStateLabel_->SetFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
+        loginStateLabel_->SetForegroundColour(kMuted);
         sizer->Add(loginStateLabel_, 0, wxALIGN_CENTER_VERTICAL);
 
         return sizer;
@@ -399,16 +690,28 @@ private:
 
     wxWindow* BuildQueryPage(wxWindow* parent) {
         wxPanel* panel = new wxPanel(parent);
+        stylePanel(panel, kCanvas);
         wxBoxSizer* pageSizer = new wxBoxSizer(wxHORIZONTAL);
         wxPanel* formPanel = new wxPanel(panel);
-        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        stylePanel(formPanel, kSurfaceCard);
+        wxStaticBoxSizer* sizer = new wxStaticBoxSizer(wxVERTICAL, formPanel, "Student Query");
+        styleStaticBox(sizer);
 
-        wxFlexGridSizer* grid = new wxFlexGridSizer(4, 2, 10, 10);
+        wxStaticText* queryIntro = new wxStaticText(formPanel,
+                                                   wxID_ANY,
+                                                   "Filter course records without logging in.");
+        queryIntro->SetForegroundColour(kMuted);
+        queryIntro->SetFont(bodyFont(10));
+
+        wxFlexGridSizer* grid = new wxFlexGridSizer(6, 2, 10, 10);
         grid->AddGrowableCol(1, 1);
 
         codeCtrl_ = new wxTextCtrl(formPanel, wxID_ANY);
         instructorCtrl_ = new wxTextCtrl(formPanel, wxID_ANY);
         semesterChoice_ = new wxChoice(formPanel, wxID_ANY);
+        styleTextCtrl(codeCtrl_);
+        styleTextCtrl(instructorCtrl_);
+        styleChoice(semesterChoice_);
         const char* semesters[] = {"Any", "2025F", "2025S", "2026F", "2026S"};
         for (const char* semester : semesters) {
             semesterChoice_->Append(semester);
@@ -424,8 +727,8 @@ private:
         grid->Add(new wxStaticText(formPanel, wxID_ANY, "Semester"), 0, wxALIGN_CENTER_VERTICAL);
         grid->Add(semesterChoice_, 1, wxEXPAND);
 
-        wxBoxSizer* timeSizer = new wxBoxSizer(wxHORIZONTAL);
         dayChoice_ = new wxChoice(formPanel, wxID_ANY);
+        styleChoice(dayChoice_);
         const char* days[] = {"Any", "Mon", "Tue", "Wed", "Thu", "Fri"};
         for (const char* day : days) {
             dayChoice_->Append(day);
@@ -434,6 +737,8 @@ private:
 
         startChoice_ = new wxChoice(formPanel, wxID_ANY, wxDefaultPosition, wxSize(78, -1));
         endChoice_ = new wxChoice(formPanel, wxID_ANY, wxDefaultPosition, wxSize(78, -1));
+        styleChoice(startChoice_);
+        styleChoice(endChoice_);
         const char* times[] = {
             "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
             "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
@@ -449,26 +754,29 @@ private:
         startChoice_->SetSelection(0);
         endChoice_->SetSelection(0);
 
-        timeSizer->Add(dayChoice_, 1, wxRIGHT, 6);
-        timeSizer->Add(startChoice_, 0, wxRIGHT, 6);
-        timeSizer->Add(endChoice_, 0);
-
-        grid->Add(new wxStaticText(formPanel, wxID_ANY, "Time Slot"), 0, wxALIGN_CENTER_VERTICAL);
-        grid->Add(timeSizer, 1, wxEXPAND);
+        grid->Add(new wxStaticText(formPanel, wxID_ANY, "Day"), 0, wxALIGN_CENTER_VERTICAL);
+        grid->Add(dayChoice_, 1, wxEXPAND);
+        grid->Add(new wxStaticText(formPanel, wxID_ANY, "Start Time"), 0, wxALIGN_CENTER_VERTICAL);
+        grid->Add(startChoice_, 1, wxEXPAND);
+        grid->Add(new wxStaticText(formPanel, wxID_ANY, "End Time"), 0, wxALIGN_CENTER_VERTICAL);
+        grid->Add(endChoice_, 1, wxEXPAND);
 
         querySearchButton_ = new wxButton(formPanel, wxID_ANY, "Search");
         queryResetButton_ = new wxButton(formPanel, wxID_ANY, "Reset");
+        styleButton(querySearchButton_, true);
+        styleButton(queryResetButton_);
         wxBoxSizer* queryButtonSizer = new wxBoxSizer(wxHORIZONTAL);
         queryButtonSizer->Add(querySearchButton_, 1, wxRIGHT, 8);
         queryButtonSizer->Add(queryResetButton_, 0);
 
+        sizer->Add(queryIntro, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 14);
         sizer->Add(grid, 0, wxEXPAND | wxALL, 14);
         sizer->Add(queryButtonSizer, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 14);
         sizer->AddStretchSpacer(1);
-        formPanel->SetMinSize(wxSize(390, -1));
+        formPanel->SetMinSize(wxSize(360, -1));
         formPanel->SetSizer(sizer);
 
-        pageSizer->Add(formPanel, 0, wxEXPAND | wxRIGHT, 10);
+        pageSizer->Add(formPanel, 0, wxEXPAND | wxRIGHT, 16);
         pageSizer->Add(BuildResultPanel(panel), 1, wxEXPAND);
         panel->SetSizer(pageSizer);
         return panel;
@@ -476,23 +784,32 @@ private:
 
     wxWindow* BuildAdminPage(wxWindow* parent) {
         wxScrolledWindow* panel = new wxScrolledWindow(parent);
+        stylePanel(panel, kCanvas);
         panel->SetScrollRate(8, 8);
         wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
+        wxStaticBoxSizer* loginBox = new wxStaticBoxSizer(wxHORIZONTAL, panel, "Admin Login");
+        styleStaticBox(loginBox);
         wxBoxSizer* loginSizer = new wxBoxSizer(wxHORIZONTAL);
         adminUserCtrl_ = new wxTextCtrl(panel, wxID_ANY, "admin", wxDefaultPosition, wxSize(180, -1));
         adminPasswordCtrl_ = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(180, -1), wxTE_PASSWORD);
         loginButton_ = new wxButton(panel, wxID_ANY, "Login");
+        styleTextCtrl(adminUserCtrl_);
+        styleTextCtrl(adminPasswordCtrl_);
+        styleButton(loginButton_, true);
 
         loginSizer->Add(CreateFormLabel(panel, "User"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         loginSizer->Add(adminUserCtrl_, 0, wxRIGHT, 10);
         loginSizer->Add(CreateFormLabel(panel, "Password"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         loginSizer->Add(adminPasswordCtrl_, 0, wxRIGHT, 10);
         loginSizer->Add(loginButton_, 0);
-        sizer->Add(loginSizer, 0, wxALIGN_LEFT | wxALL, 12);
+        loginBox->Add(loginSizer, 1, wxEXPAND | wxALL, 12);
+        sizer->Add(loginBox, 0, wxEXPAND | wxALL, 12);
 
         wxStaticBoxSizer* addBox = new wxStaticBoxSizer(wxVERTICAL, panel, "Add Course");
+        styleStaticBox(addBox);
         wxStaticBoxSizer* addBasicBox = new wxStaticBoxSizer(wxVERTICAL, panel, "Basic Information");
+        styleStaticBox(addBasicBox);
         wxFlexGridSizer* addBasicGrid = new wxFlexGridSizer(2, 4, 8, 8);
         addBasicGrid->AddGrowableCol(1, 1);
         addBasicGrid->AddGrowableCol(3, 1);
@@ -504,6 +821,7 @@ private:
         addBox->Add(addBasicBox, 0, wxEXPAND | wxALL, 10);
 
         wxStaticBoxSizer* addScheduleBox = new wxStaticBoxSizer(wxVERTICAL, panel, "Schedule");
+        styleStaticBox(addScheduleBox);
         wxFlexGridSizer* addScheduleGrid = new wxFlexGridSizer(3, 4, 8, 8);
         addScheduleGrid->AddGrowableCol(1, 1);
         addScheduleGrid->AddGrowableCol(3, 1);
@@ -523,6 +841,8 @@ private:
 
         addResetButton_ = new wxButton(panel, wxID_ANY, "Reset");
         addButton_ = new wxButton(panel, wxID_ANY, "Add Course");
+        styleButton(addResetButton_);
+        styleButton(addButton_, true);
         wxBoxSizer* addButtonSizer = new wxBoxSizer(wxHORIZONTAL);
         addButtonSizer->AddStretchSpacer(1);
         addButtonSizer->Add(addResetButton_, 0, wxRIGHT, 8);
@@ -531,12 +851,17 @@ private:
         sizer->Add(addBox, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 12);
 
         wxStaticBoxSizer* updateBox = new wxStaticBoxSizer(wxVERTICAL, panel, "Update Course");
+        styleStaticBox(updateBox);
         wxBoxSizer* locatorSizer = new wxBoxSizer(wxHORIZONTAL);
         updateCodeCtrl_ = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(180, -1));
         updateSectionCtrl_ = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(120, -1));
         updateLoadSemesterChoice_ = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxSize(140, -1));
         AddSemesterChoices(updateLoadSemesterChoice_, true);
         updateLoadButton_ = new wxButton(panel, wxID_ANY, "Load Course");
+        styleTextCtrl(updateCodeCtrl_);
+        styleTextCtrl(updateSectionCtrl_);
+        styleChoice(updateLoadSemesterChoice_);
+        styleButton(updateLoadButton_);
 
         locatorSizer->Add(CreateFormLabel(panel, "Course Code"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         locatorSizer->Add(updateCodeCtrl_, 0, wxRIGHT, 10);
@@ -568,6 +893,8 @@ private:
         wxBoxSizer* updateButtonSizer = new wxBoxSizer(wxHORIZONTAL);
         updateCancelButton_ = new wxButton(panel, wxID_ANY, "Cancel");
         updateSaveButton_ = new wxButton(panel, wxID_ANY, "Save Changes");
+        styleButton(updateCancelButton_);
+        styleButton(updateSaveButton_, true);
         updateButtonSizer->AddStretchSpacer(1);
         updateButtonSizer->Add(updateCancelButton_, 0, wxRIGHT, 8);
         updateButtonSizer->Add(updateSaveButton_, 0);
@@ -575,13 +902,19 @@ private:
         sizer->Add(updateBox, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 12);
 
         wxStaticBoxSizer* deleteBox = new wxStaticBoxSizer(wxVERTICAL, panel, "Delete Course");
+        styleStaticBox(deleteBox);
         wxStaticBoxSizer* deleteFindBox = new wxStaticBoxSizer(wxVERTICAL, panel, "Find Course to Delete");
+        styleStaticBox(deleteFindBox);
         wxBoxSizer* deleteFindSizer = new wxBoxSizer(wxHORIZONTAL);
         deleteCodeCtrl_ = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(180, -1));
         deleteSectionCtrl_ = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(120, -1));
         deleteSemesterChoice_ = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxSize(140, -1));
         AddSemesterChoices(deleteSemesterChoice_, true, "Select");
         deleteLoadButton_ = new wxButton(panel, wxID_ANY, "Load Course");
+        styleTextCtrl(deleteCodeCtrl_);
+        styleTextCtrl(deleteSectionCtrl_);
+        styleChoice(deleteSemesterChoice_);
+        styleButton(deleteLoadButton_);
         deleteFindSizer->Add(CreateFormLabel(panel, "Course Code *"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         deleteFindSizer->Add(deleteCodeCtrl_, 0, wxRIGHT, 10);
         deleteFindSizer->Add(CreateFormLabel(panel, "Section *"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
@@ -593,6 +926,7 @@ private:
         deleteBox->Add(deleteFindBox, 0, wxEXPAND | wxALL, 10);
 
         wxStaticBoxSizer* deleteInfoBox = new wxStaticBoxSizer(wxVERTICAL, panel, "Course Information");
+        styleStaticBox(deleteInfoBox);
         wxFlexGridSizer* deleteInfoGrid = new wxFlexGridSizer(5, 4, 8, 8);
         deleteInfoGrid->AddGrowableCol(1, 1);
         deleteInfoGrid->AddGrowableCol(3, 1);
@@ -606,11 +940,14 @@ private:
         deleteInfoSemesterCtrl_ = AddReadonlyFormText(panel, deleteInfoGrid, "Semester");
         deleteInfoBox->Add(deleteInfoGrid, 0, wxEXPAND | wxALL, 10);
         deleteWarningLabel_ = new wxStaticText(panel, wxID_ANY, "Warning: This action cannot be undone.");
+        deleteWarningLabel_->SetForegroundColour(kError);
         deleteInfoBox->Add(deleteWarningLabel_, 0, wxLEFT | wxRIGHT | wxBOTTOM, 10);
         deleteBox->Add(deleteInfoBox, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 10);
 
         deleteCancelButton_ = new wxButton(panel, wxID_ANY, "Cancel");
         deleteButton_ = new wxButton(panel, wxID_ANY, "Delete Course");
+        styleButton(deleteCancelButton_);
+        styleButton(deleteButton_, true);
         wxBoxSizer* deleteButtonSizer = new wxBoxSizer(wxHORIZONTAL);
         deleteButtonSizer->AddStretchSpacer(1);
         deleteButtonSizer->Add(deleteCancelButton_, 0, wxRIGHT, 8);
@@ -626,53 +963,74 @@ private:
 
     wxWindow* BuildRawLogPanel(wxWindow* parent) {
         wxPanel* panel = new wxPanel(parent);
-        wxStaticBoxSizer* sizer = new wxStaticBoxSizer(wxVERTICAL, panel, "Raw Log");
+        stylePanel(panel, kCanvas);
+        wxStaticBoxSizer* sizer = new wxStaticBoxSizer(wxVERTICAL, panel, "Live Protocol Log");
+        styleStaticBox(sizer);
 
         rawResponseCtrl_ = new wxTextCtrl(panel,
                                           wxID_ANY,
                                           "",
                                           wxDefaultPosition,
-                                          wxSize(-1, 150),
+                                          wxSize(-1, 96),
                                           wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxHSCROLL);
+        rawResponseCtrl_->SetBackgroundColour(kSurfaceSoft);
+        rawResponseCtrl_->SetForegroundColour(kInk);
+        rawResponseCtrl_->SetFont(wxFont(9,
+                                         wxFONTFAMILY_TELETYPE,
+                                         wxFONTSTYLE_NORMAL,
+                                         wxFONTWEIGHT_NORMAL,
+                                         false,
+                                         "Consolas"));
         sizer->Add(rawResponseCtrl_, 1, wxEXPAND | wxALL, 8);
 
-        panel->SetMinSize(wxSize(-1, 150));
+        panel->SetMinSize(wxSize(-1, 112));
         panel->SetSizer(sizer);
         return panel;
     }
 
     wxWindow* BuildResultPanel(wxWindow* parent) {
         wxPanel* panel = new wxPanel(parent);
-        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        stylePanel(panel, kCanvas);
+        wxStaticBoxSizer* sizer = new wxStaticBoxSizer(wxVERTICAL, panel, "Course Results");
+        styleStaticBox(sizer);
 
         resultGrid_ = new wxGrid(panel, wxID_ANY);
-        resultGrid_->CreateGrid(0, 9);
-        const char* labels[] = {
-            "Code", "Title", "Section", "Instructor", "Day",
-            "Start", "End", "Classroom", "Semester"
-        };
-        for (int col = 0; col < 9; ++col) {
-            resultGrid_->SetColLabelValue(col, labels[col]);
-        }
+        resultGrid_->SetDoubleBuffered(true);
+        resultTable_ = new CourseGridTable();
+        resultGrid_->SetTable(resultTable_, true, wxGrid::wxGridSelectRows);
         resultGrid_->EnableEditing(false);
-        resultGrid_->SetRowLabelSize(42);
-        resultGrid_->SetColSize(0, 92);
-        resultGrid_->SetColSize(1, 240);
+        resultGrid_->SetRowLabelSize(0);
+        resultGrid_->SetColLabelSize(34);
+        resultGrid_->SetBackgroundColour(*wxWHITE);
+        resultGrid_->SetDefaultCellBackgroundColour(*wxWHITE);
+        resultGrid_->SetDefaultCellTextColour(kInk);
+        resultGrid_->SetLabelBackgroundColour(kSurfaceSoft);
+        resultGrid_->SetLabelTextColour(kInk);
+        resultGrid_->SetGridLineColour(kHairline);
+        resultGrid_->SetDefaultCellFont(bodyFont(10));
+        resultGrid_->SetLabelFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
+        resultGrid_->SetDefaultRowSize(30, true);
+        resultGrid_->SetCellHighlightPenWidth(0);
+        resultGrid_->SetCellHighlightROPenWidth(0);
+        resultGrid_->DisableDragGridSize();
+        resultGrid_->SetColSize(0, 96);
+        resultGrid_->SetColSize(1, 260);
         resultGrid_->SetColSize(2, 74);
-        resultGrid_->SetColSize(3, 160);
+        resultGrid_->SetColSize(3, 175);
         resultGrid_->SetColSize(4, 70);
         resultGrid_->SetColSize(5, 78);
         resultGrid_->SetColSize(6, 78);
         resultGrid_->SetColSize(7, 100);
         resultGrid_->SetColSize(8, 90);
 
-        sizer->Add(resultGrid_, 1, wxEXPAND);
+        sizer->Add(resultGrid_, 1, wxEXPAND | wxALL, 10);
         panel->SetSizer(sizer);
         return panel;
     }
 
     wxTextCtrl* AddLabeledText(wxWindow* parent, wxFlexGridSizer* sizer, const wxString& label) {
         wxTextCtrl* ctrl = new wxTextCtrl(parent, wxID_ANY);
+        styleTextCtrl(ctrl);
         sizer->Add(new wxStaticText(parent, wxID_ANY, label), 0, wxALIGN_CENTER_VERTICAL);
         sizer->Add(ctrl, 1, wxEXPAND);
         return ctrl;
@@ -681,12 +1039,15 @@ private:
     wxStaticText* CreateFormLabel(wxWindow* parent, const wxString& label) {
         wxStaticText* text = new wxStaticText(parent, wxID_ANY, label);
         text->SetMinSize(wxSize(92, -1));
+        text->SetFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
+        text->SetForegroundColour(kBody);
         return text;
     }
 
     wxTextCtrl* AddFormText(wxWindow* parent, wxFlexGridSizer* sizer, const wxString& label) {
         wxTextCtrl* ctrl = new wxTextCtrl(parent, wxID_ANY);
         ctrl->SetMinSize(wxSize(180, -1));
+        styleTextCtrl(ctrl);
         sizer->Add(CreateFormLabel(parent, label), 0, wxALIGN_CENTER_VERTICAL);
         sizer->Add(ctrl, 1, wxEXPAND);
         return ctrl;
@@ -700,6 +1061,7 @@ private:
                                          wxDefaultSize,
                                          wxTE_READONLY);
         ctrl->SetMinSize(wxSize(180, -1));
+        styleTextCtrl(ctrl);
         sizer->Add(CreateFormLabel(parent, label), 0, wxALIGN_CENTER_VERTICAL);
         sizer->Add(ctrl, 1, wxEXPAND);
         return ctrl;
@@ -708,6 +1070,7 @@ private:
     wxChoice* AddFormChoice(wxWindow* parent, wxFlexGridSizer* sizer, const wxString& label) {
         wxChoice* choice = new wxChoice(parent, wxID_ANY);
         choice->SetMinSize(wxSize(180, -1));
+        styleChoice(choice);
         sizer->Add(CreateFormLabel(parent, label), 0, wxALIGN_CENTER_VERTICAL);
         sizer->Add(choice, 1, wxEXPAND);
         return choice;
@@ -1334,15 +1697,7 @@ private:
         wxThreadEvent* event = new wxThreadEvent(EVT_COMMAND_FINISHED);
         event->SetString(stdToWx(command));
         event->SetInt(response.connected ? 1 : 0);
-
-        std::ostringstream payload;
-        payload << (response.ok ? "1" : "0") << '\n'
-                << response.error << '\n'
-                << response.firstLine << '\n';
-        for (const std::string& line : response.bodyLines) {
-            payload << line << '\n';
-        }
-        event->SetPayload<std::string>(payload.str());
+        event->SetPayload<ServerResponse>(response);
         wxQueueEvent(this, event);
     }
 
@@ -1352,7 +1707,7 @@ private:
             worker_.join();
         }
 
-        const ServerResponse response = UnpackResponse(event.GetPayload<std::string>());
+        const ServerResponse response = event.GetPayload<ServerResponse>();
         const std::string command = wxToStd(event.GetString());
         const bool connected = event.GetInt() == 1 && client_.isConnected();
 
@@ -1443,7 +1798,11 @@ private:
         }
 
         if (Protocol::startsWithIgnoreCase(response.firstLine, "RESULT ")) {
-            PopulateGrid(parseCourseRows(response));
+            std::vector<CourseRow> rows = parseCourseRows(response);
+            if (rows.empty()) {
+                SetStatusText("No matching courses.");
+            }
+            PopulateGrid(std::move(rows));
         }
 
         if (Protocol::startsWithIgnoreCase(command, "ADD ")) {
@@ -1483,36 +1842,29 @@ private:
         }
     }
 
-    ServerResponse UnpackResponse(const std::string& payload) {
-        ServerResponse response;
-        std::istringstream input(payload);
-        std::string okLine;
-        std::getline(input, okLine);
-        response.ok = okLine == "1";
-        std::getline(input, response.error);
-        std::getline(input, response.firstLine);
-
-        std::string line;
-        while (std::getline(input, line)) {
-            if (!line.empty() && line.back() == '\r') {
-                line.pop_back();
-            }
-            if (!line.empty()) {
-                response.bodyLines.push_back(line);
-            }
-        }
-        return response;
-    }
-
     void AppendRawLog(const wxString& message) {
         if (rawResponseCtrl_ == nullptr) {
             return;
         }
 
         wxString line = "[" + wxDateTime::Now().FormatISOTime() + "] " + message;
-        rawResponseCtrl_->AppendText(line);
         if (!line.EndsWith("\n")) {
-            rawResponseCtrl_->AppendText("\n");
+            line += "\n";
+        }
+
+        rawLogLines_.push_back(line);
+        const bool needsTrim = rawLogLines_.size() > kMaxRawLogLines;
+        if (needsTrim) {
+            rawLogLines_.erase(rawLogLines_.begin(),
+                               rawLogLines_.begin() + (rawLogLines_.size() - kMaxRawLogLines));
+
+            wxString text;
+            for (const wxString& item : rawLogLines_) {
+                text += item;
+            }
+            rawResponseCtrl_->ChangeValue(text);
+        } else {
+            rawResponseCtrl_->AppendText(line);
         }
         rawResponseCtrl_->ShowPosition(rawResponseCtrl_->GetLastPosition());
     }
@@ -1522,7 +1874,20 @@ private:
     }
 
     void AppendRecvLog(const ServerResponse& response) {
-        std::string text = response.ok ? response.rawText() : response.error;
+        std::string text;
+        if (!response.ok) {
+            text = response.error;
+        } else {
+            text = response.firstLine;
+            const std::size_t previewCount = std::min<std::size_t>(response.bodyLines.size(), 12);
+            for (std::size_t index = 0; index < previewCount; ++index) {
+                text += "\n" + response.bodyLines[index];
+            }
+            if (response.bodyLines.size() > previewCount) {
+                text += "\n... " + std::to_string(response.bodyLines.size() - previewCount) +
+                        " more lines hidden from the live log";
+            }
+        }
         if (text.empty()) {
             text = response.firstLine;
         }
@@ -1544,6 +1909,7 @@ private:
     void UpdateConnectionState(bool connected) {
         connectionLabel_->SetLabel(connected ? (client_.isSecure() ? "Connected (encrypted)" : "Connected")
                                            : "Disconnected");
+        connectionLabel_->SetForegroundColour(connected ? kSuccess : kMuted);
         connectButton_->Enable(!connected && !busy_);
         disconnectButton_->Enable(connected && !busy_);
         hostCtrl_->Enable(!connected && !busy_);
@@ -1554,7 +1920,8 @@ private:
     }
 
     void UpdateAdminState() {
-        loginStateLabel_->SetLabel(isAdmin_ ? "Role: Administrator" : "Role: Student");
+        loginStateLabel_->SetLabel(isAdmin_ ? "Role: Admin" : "Role: Student");
+        loginStateLabel_->SetForegroundColour(isAdmin_ ? kSuccess : kMuted);
 
         const bool adminEnabled = isAdmin_ && client_.isConnected() && !busy_;
         SetAdminControlsEnabled(adminEnabled);
@@ -1622,30 +1989,36 @@ private:
         UpdateAdminState();
     }
 
-    void PopulateGrid(const std::vector<CourseRow>& rows) {
-        const int existingRows = resultGrid_->GetNumberRows();
-        if (existingRows > 0) {
-            resultGrid_->DeleteRows(0, existingRows);
-        }
-
-        if (rows.empty()) {
+    void PopulateGrid(std::vector<CourseRow> rows) {
+        if (resultGrid_ == nullptr || resultTable_ == nullptr) {
             return;
         }
 
-        resultGrid_->AppendRows(static_cast<int>(rows.size()));
-        for (std::size_t rowIndex = 0; rowIndex < rows.size(); ++rowIndex) {
-            const CourseRow& row = rows[rowIndex];
-            const int rowNumber = static_cast<int>(rowIndex);
-            resultGrid_->SetCellValue(rowNumber, 0, stdToWx(row.code));
-            resultGrid_->SetCellValue(rowNumber, 1, stdToWx(row.title));
-            resultGrid_->SetCellValue(rowNumber, 2, stdToWx(row.section));
-            resultGrid_->SetCellValue(rowNumber, 3, stdToWx(row.instructor));
-            resultGrid_->SetCellValue(rowNumber, 4, stdToWx(row.day));
-            resultGrid_->SetCellValue(rowNumber, 5, stdToWx(row.start));
-            resultGrid_->SetCellValue(rowNumber, 6, stdToWx(row.end));
-            resultGrid_->SetCellValue(rowNumber, 7, stdToWx(row.classroom));
-            resultGrid_->SetCellValue(rowNumber, 8, stdToWx(row.semester));
+        const int oldRowCount = resultTable_->GetNumberRows();
+        const int newRowCount = static_cast<int>(rows.size());
+
+        resultGrid_->Freeze();
+        resultGrid_->BeginBatch();
+
+        resultTable_->SetRows(std::move(rows));
+
+        if (newRowCount < oldRowCount) {
+            wxGridTableMessage msg(resultTable_,
+                                   wxGRIDTABLE_NOTIFY_ROWS_DELETED,
+                                   newRowCount,
+                                   oldRowCount - newRowCount);
+            resultGrid_->ProcessTableMessage(msg);
+        } else if (newRowCount > oldRowCount) {
+            wxGridTableMessage msg(resultTable_,
+                                   wxGRIDTABLE_NOTIFY_ROWS_APPENDED,
+                                   newRowCount - oldRowCount);
+            resultGrid_->ProcessTableMessage(msg);
         }
+
+        resultGrid_->ClearSelection();
+        resultGrid_->Refresh();
+        resultGrid_->EndBatch();
+        resultGrid_->Thaw();
     }
 
     void ShowProtocolHelp() {
@@ -1727,7 +2100,10 @@ private:
     wxButton* deleteButton_ = nullptr;
 
     wxGrid* resultGrid_ = nullptr;
+    CourseGridTable* resultTable_ = nullptr;
     wxTextCtrl* rawResponseCtrl_ = nullptr;
+    static constexpr std::size_t kMaxRawLogLines = 160;
+    std::vector<wxString> rawLogLines_;
 };
 
 class CourseGuiApp : public wxApp {

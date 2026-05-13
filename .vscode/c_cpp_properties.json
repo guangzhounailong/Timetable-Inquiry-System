@@ -4,12 +4,15 @@
             "name": "MinGW",
             "includePath": [
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/src"
+                "${workspaceFolder}/src",
+                "E:/wxWidgets/include",
+                "E:/wxWidgets/lib/vc_x64_lib/mswu"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
-                "_UNICODE"
+                "_UNICODE",
+                "__WXMSW__"
             ],
             "compilerPath": "C:/mingw64/bin/g++.exe",
             "cStandard": "c17",
