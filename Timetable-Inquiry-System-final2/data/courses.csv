@@ -1,0 +1,1002 @@
+CourseCode,CourseTitle,Section,Instructor,Day,StartTime,EndTime,Classroom,Semester
+COMP1000,Data Communications,A,John Lee,Mon,08:30,10:00,A101,2025F
+MATH1001,Operating Systems,B,Alice Chan,Tue,10:00,11:30,A108,2025S
+STAT1002,Database Systems,C,Mary Wong,Wed,11:30,13:00,A202,2026F
+BUS1003,Software Engineering,D,David Smith,Thu,13:00,14:30,B201,2026S
+ENG1004,Computer Networks,A,Kevin Brown,Fri,14:30,16:00,B202,2025F
+PHYS1005,Calculus,B,Lisa Chen,Mon,16:00,17:30,B301,2025S
+CHEM1006,Probability and Statistics,C,Peter Ho,Tue,18:00,20:00,C105,2026F
+BIO1007,Business Analytics,D,Grace Lam,Wed,08:30,10:00,C301,2026S
+ECON1008,Academic Writing,A,Helen Zhao,Thu,10:00,11:30,D210,2025F
+ART1009,Digital Design,B,Michael Tan,Fri,11:30,13:00,D305,2025S
+COMP1010,Cloud Computing,C,Sarah Liu,Mon,13:00,14:30,E110,2026F
+MATH1011,Network Security,D,Daniel Wu,Tue,14:30,16:00,F402,2026S
+STAT1012,Artificial Intelligence,A,Emma Chen,Wed,16:00,17:30,A101,2025F
+BUS1013,Web Development,B,Robert Young,Thu,18:00,20:00,A108,2025S
+ENG1014,Linear Algebra,C,Anna Wang,Fri,08:30,10:00,A202,2026F
+PHYS1015,Discrete Mathematics,D,Victor Lam,Mon,10:00,11:30,B201,2026S
+CHEM1016,Project Management,A,John Lee,Tue,11:30,13:00,B202,2025F
+BIO1017,Information Systems,B,Alice Chan,Wed,13:00,14:30,B301,2025S
+ECON1018,Cybersecurity Fundamentals,C,Mary Wong,Thu,14:30,16:00,C105,2026F
+ART1019,Machine Learning,D,David Smith,Fri,16:00,17:30,C301,2026S
+COMP1020,Data Communications,A,Kevin Brown,Mon,18:00,20:00,D210,2025F
+MATH1021,Operating Systems,B,Lisa Chen,Tue,08:30,10:00,D305,2025S
+STAT1022,Database Systems,C,Peter Ho,Wed,10:00,11:30,E110,2026F
+BUS1023,Software Engineering,D,Grace Lam,Thu,11:30,13:00,F402,2026S
+ENG1024,Computer Networks,A,Helen Zhao,Fri,13:00,14:30,A101,2025F
+PHYS1025,Calculus,B,Michael Tan,Mon,14:30,16:00,A108,2025S
+CHEM1026,Probability and Statistics,C,Sarah Liu,Tue,16:00,17:30,A202,2026F
+BIO1027,Business Analytics,D,Daniel Wu,Wed,18:00,20:00,B201,2026S
+ECON1028,Academic Writing,A,Emma Chen,Thu,08:30,10:00,B202,2025F
+ART1029,Digital Design,B,Robert Young,Fri,10:00,11:30,B301,2025S
+COMP1030,Cloud Computing,C,Anna Wang,Mon,11:30,13:00,C105,2026F
+MATH1031,Network Security,D,Victor Lam,Tue,13:00,14:30,C301,2026S
+STAT1032,Artificial Intelligence,A,John Lee,Wed,14:30,16:00,D210,2025F
+BUS1033,Web Development,B,Alice Chan,Thu,16:00,17:30,D305,2025S
+ENG1034,Linear Algebra,C,Mary Wong,Fri,18:00,20:00,E110,2026F
+PHYS1035,Discrete Mathematics,D,David Smith,Mon,08:30,10:00,F402,2026S
+CHEM1036,Project Management,A,Kevin Brown,Tue,10:00,11:30,A101,2025F
+BIO1037,Information Systems,B,Lisa Chen,Wed,11:30,13:00,A108,2025S
+ECON1038,Cybersecurity Fundamentals,C,Peter Ho,Thu,13:00,14:30,A202,2026F
+ART1039,Machine Learning,D,Grace Lam,Fri,14:30,16:00,B201,2026S
+COMP1040,Data Communications,A,Helen Zhao,Mon,16:00,17:30,B202,2025F
+MATH1041,Operating Systems,B,Michael Tan,Tue,18:00,20:00,B301,2025S
+STAT1042,Database Systems,C,Sarah Liu,Wed,08:30,10:00,C105,2026F
+BUS1043,Software Engineering,D,Daniel Wu,Thu,10:00,11:30,C301,2026S
+ENG1044,Computer Networks,A,Emma Chen,Fri,11:30,13:00,D210,2025F
+PHYS1045,Calculus,B,Robert Young,Mon,13:00,14:30,D305,2025S
+CHEM1046,Probability and Statistics,C,Anna Wang,Tue,14:30,16:00,E110,2026F
+BIO1047,Business Analytics,D,Victor Lam,Wed,16:00,17:30,F402,2026S
+ECON1048,Academic Writing,A,John Lee,Thu,18:00,20:00,A101,2025F
+ART1049,Digital Design,B,Alice Chan,Fri,08:30,10:00,A108,2025S
+COMP1050,Cloud Computing,C,Mary Wong,Mon,10:00,11:30,A202,2026F
+MATH1051,Network Security,D,David Smith,Tue,11:30,13:00,B201,2026S
+STAT1052,Artificial Intelligence,A,Kevin Brown,Wed,13:00,14:30,B202,2025F
+BUS1053,Web Development,B,Lisa Chen,Thu,14:30,16:00,B301,2025S
+ENG1054,Linear Algebra,C,Peter Ho,Fri,16:00,17:30,C105,2026F
+PHYS1055,Discrete Mathematics,D,Grace Lam,Mon,18:00,20:00,C301,2026S
+CHEM1056,Project Management,A,Helen Zhao,Tue,08:30,10:00,D210,2025F
+BIO1057,Information Systems,B,Michael Tan,Wed,10:00,11:30,D305,2025S
+ECON1058,Cybersecurity Fundamentals,C,Sarah Liu,Thu,11:30,13:00,E110,2026F
+ART1059,Machine Learning,D,Daniel Wu,Fri,13:00,14:30,F402,2026S
+COMP1060,Data Communications,A,Emma Chen,Mon,14:30,16:00,A101,2025F
+MATH1061,Operating Systems,B,Robert Young,Tue,16:00,17:30,A108,2025S
+STAT1062,Database Systems,C,Anna Wang,Wed,18:00,20:00,A202,2026F
+BUS1063,Software Engineering,D,Victor Lam,Thu,08:30,10:00,B201,2026S
+ENG1064,Computer Networks,A,John Lee,Fri,10:00,11:30,B202,2025F
+PHYS1065,Calculus,B,Alice Chan,Mon,11:30,13:00,B301,2025S
+CHEM1066,Probability and Statistics,C,Mary Wong,Tue,13:00,14:30,C105,2026F
+BIO1067,Business Analytics,D,David Smith,Wed,14:30,16:00,C301,2026S
+ECON1068,Academic Writing,A,Kevin Brown,Thu,16:00,17:30,D210,2025F
+ART1069,Digital Design,B,Lisa Chen,Fri,18:00,20:00,D305,2025S
+COMP1070,Cloud Computing,C,Peter Ho,Mon,08:30,10:00,E110,2026F
+MATH1071,Network Security,D,Grace Lam,Tue,10:00,11:30,F402,2026S
+STAT1072,Artificial Intelligence,A,Helen Zhao,Wed,11:30,13:00,A101,2025F
+BUS1073,Web Development,B,Michael Tan,Thu,13:00,14:30,A108,2025S
+ENG1074,Linear Algebra,C,Sarah Liu,Fri,14:30,16:00,A202,2026F
+PHYS1075,Discrete Mathematics,D,Daniel Wu,Mon,16:00,17:30,B201,2026S
+CHEM1076,Project Management,A,Emma Chen,Tue,18:00,20:00,B202,2025F
+BIO1077,Information Systems,B,Robert Young,Wed,08:30,10:00,B301,2025S
+ECON1078,Cybersecurity Fundamentals,C,Anna Wang,Thu,10:00,11:30,C105,2026F
+ART1079,Machine Learning,D,Victor Lam,Fri,11:30,13:00,C301,2026S
+COMP1080,Data Communications,A,John Lee,Mon,13:00,14:30,D210,2025F
+MATH1081,Operating Systems,B,Alice Chan,Tue,14:30,16:00,D305,2025S
+STAT1082,Database Systems,C,Mary Wong,Wed,16:00,17:30,E110,2026F
+BUS1083,Software Engineering,D,David Smith,Thu,18:00,20:00,F402,2026S
+ENG1084,Computer Networks,A,Kevin Brown,Fri,08:30,10:00,A101,2025F
+PHYS1085,Calculus,B,Lisa Chen,Mon,10:00,11:30,A108,2025S
+CHEM1086,Probability and Statistics,C,Peter Ho,Tue,11:30,13:00,A202,2026F
+BIO1087,Business Analytics,D,Grace Lam,Wed,13:00,14:30,B201,2026S
+ECON1088,Academic Writing,A,Helen Zhao,Thu,14:30,16:00,B202,2025F
+ART1089,Digital Design,B,Michael Tan,Fri,16:00,17:30,B301,2025S
+COMP1090,Cloud Computing,C,Sarah Liu,Mon,18:00,20:00,C105,2026F
+MATH1091,Network Security,D,Daniel Wu,Tue,08:30,10:00,C301,2026S
+STAT1092,Artificial Intelligence,A,Emma Chen,Wed,10:00,11:30,D210,2025F
+BUS1093,Web Development,B,Robert Young,Thu,11:30,13:00,D305,2025S
+ENG1094,Linear Algebra,C,Anna Wang,Fri,13:00,14:30,E110,2026F
+PHYS1095,Discrete Mathematics,D,Victor Lam,Mon,14:30,16:00,F402,2026S
+CHEM1096,Project Management,A,John Lee,Tue,16:00,17:30,A101,2025F
+BIO1097,Information Systems,B,Alice Chan,Wed,18:00,20:00,A108,2025S
+ECON1098,Cybersecurity Fundamentals,C,Mary Wong,Thu,08:30,10:00,A202,2026F
+ART1099,Machine Learning,D,David Smith,Fri,10:00,11:30,B201,2026S
+COMP1100,Data Communications,A,Kevin Brown,Mon,11:30,13:00,B202,2025F
+MATH1101,Operating Systems,B,Lisa Chen,Tue,13:00,14:30,B301,2025S
+STAT1102,Database Systems,C,Peter Ho,Wed,14:30,16:00,C105,2026F
+BUS1103,Software Engineering,D,Grace Lam,Thu,16:00,17:30,C301,2026S
+ENG1104,Computer Networks,A,Helen Zhao,Fri,18:00,20:00,D210,2025F
+PHYS1105,Calculus,B,Michael Tan,Mon,08:30,10:00,D305,2025S
+CHEM1106,Probability and Statistics,C,Sarah Liu,Tue,10:00,11:30,E110,2026F
+BIO1107,Business Analytics,D,Daniel Wu,Wed,11:30,13:00,F402,2026S
+ECON1108,Academic Writing,A,Emma Chen,Thu,13:00,14:30,A101,2025F
+ART1109,Digital Design,B,Robert Young,Fri,14:30,16:00,A108,2025S
+COMP1110,Cloud Computing,C,Anna Wang,Mon,16:00,17:30,A202,2026F
+MATH1111,Network Security,D,Victor Lam,Tue,18:00,20:00,B201,2026S
+STAT1112,Artificial Intelligence,A,John Lee,Wed,08:30,10:00,B202,2025F
+BUS1113,Web Development,B,Alice Chan,Thu,10:00,11:30,B301,2025S
+ENG1114,Linear Algebra,C,Mary Wong,Fri,11:30,13:00,C105,2026F
+PHYS1115,Discrete Mathematics,D,David Smith,Mon,13:00,14:30,C301,2026S
+CHEM1116,Project Management,A,Kevin Brown,Tue,14:30,16:00,D210,2025F
+BIO1117,Information Systems,B,Lisa Chen,Wed,16:00,17:30,D305,2025S
+ECON1118,Cybersecurity Fundamentals,C,Peter Ho,Thu,18:00,20:00,E110,2026F
+ART1119,Machine Learning,D,Grace Lam,Fri,08:30,10:00,F402,2026S
+COMP1120,Data Communications,A,Helen Zhao,Mon,10:00,11:30,A101,2025F
+MATH1121,Operating Systems,B,Michael Tan,Tue,11:30,13:00,A108,2025S
+STAT1122,Database Systems,C,Sarah Liu,Wed,13:00,14:30,A202,2026F
+BUS1123,Software Engineering,D,Daniel Wu,Thu,14:30,16:00,B201,2026S
+ENG1124,Computer Networks,A,Emma Chen,Fri,16:00,17:30,B202,2025F
+PHYS1125,Calculus,B,Robert Young,Mon,18:00,20:00,B301,2025S
+CHEM1126,Probability and Statistics,C,Anna Wang,Tue,08:30,10:00,C105,2026F
+BIO1127,Business Analytics,D,Victor Lam,Wed,10:00,11:30,C301,2026S
+ECON1128,Academic Writing,A,John Lee,Thu,11:30,13:00,D210,2025F
+ART1129,Digital Design,B,Alice Chan,Fri,13:00,14:30,D305,2025S
+COMP1130,Cloud Computing,C,Mary Wong,Mon,14:30,16:00,E110,2026F
+MATH1131,Network Security,D,David Smith,Tue,16:00,17:30,F402,2026S
+STAT1132,Artificial Intelligence,A,Kevin Brown,Wed,18:00,20:00,A101,2025F
+BUS1133,Web Development,B,Lisa Chen,Thu,08:30,10:00,A108,2025S
+ENG1134,Linear Algebra,C,Peter Ho,Fri,10:00,11:30,A202,2026F
+PHYS1135,Discrete Mathematics,D,Grace Lam,Mon,11:30,13:00,B201,2026S
+CHEM1136,Project Management,A,Helen Zhao,Tue,13:00,14:30,B202,2025F
+BIO1137,Information Systems,B,Michael Tan,Wed,14:30,16:00,B301,2025S
+ECON1138,Cybersecurity Fundamentals,C,Sarah Liu,Thu,16:00,17:30,C105,2026F
+ART1139,Machine Learning,D,Daniel Wu,Fri,18:00,20:00,C301,2026S
+COMP1140,Data Communications,A,Emma Chen,Mon,08:30,10:00,D210,2025F
+MATH1141,Operating Systems,B,Robert Young,Tue,10:00,11:30,D305,2025S
+STAT1142,Database Systems,C,Anna Wang,Wed,11:30,13:00,E110,2026F
+BUS1143,Software Engineering,D,Victor Lam,Thu,13:00,14:30,F402,2026S
+ENG1144,Computer Networks,A,John Lee,Fri,14:30,16:00,A101,2025F
+PHYS1145,Calculus,B,Alice Chan,Mon,16:00,17:30,A108,2025S
+CHEM1146,Probability and Statistics,C,Mary Wong,Tue,18:00,20:00,A202,2026F
+BIO1147,Business Analytics,D,David Smith,Wed,08:30,10:00,B201,2026S
+ECON1148,Academic Writing,A,Kevin Brown,Thu,10:00,11:30,B202,2025F
+ART1149,Digital Design,B,Lisa Chen,Fri,11:30,13:00,B301,2025S
+COMP1150,Cloud Computing,C,Peter Ho,Mon,13:00,14:30,C105,2026F
+MATH1151,Network Security,D,Grace Lam,Tue,14:30,16:00,C301,2026S
+STAT1152,Artificial Intelligence,A,Helen Zhao,Wed,16:00,17:30,D210,2025F
+BUS1153,Web Development,B,Michael Tan,Thu,18:00,20:00,D305,2025S
+ENG1154,Linear Algebra,C,Sarah Liu,Fri,08:30,10:00,E110,2026F
+PHYS1155,Discrete Mathematics,D,Daniel Wu,Mon,10:00,11:30,F402,2026S
+CHEM1156,Project Management,A,Emma Chen,Tue,11:30,13:00,A101,2025F
+BIO1157,Information Systems,B,Robert Young,Wed,13:00,14:30,A108,2025S
+ECON1158,Cybersecurity Fundamentals,C,Anna Wang,Thu,14:30,16:00,A202,2026F
+ART1159,Machine Learning,D,Victor Lam,Fri,16:00,17:30,B201,2026S
+COMP1160,Data Communications,A,John Lee,Mon,18:00,20:00,B202,2025F
+MATH1161,Operating Systems,B,Alice Chan,Tue,08:30,10:00,B301,2025S
+STAT1162,Database Systems,C,Mary Wong,Wed,10:00,11:30,C105,2026F
+BUS1163,Software Engineering,D,David Smith,Thu,11:30,13:00,C301,2026S
+ENG1164,Computer Networks,A,Kevin Brown,Fri,13:00,14:30,D210,2025F
+PHYS1165,Calculus,B,Lisa Chen,Mon,14:30,16:00,D305,2025S
+CHEM1166,Probability and Statistics,C,Peter Ho,Tue,16:00,17:30,E110,2026F
+BIO1167,Business Analytics,D,Grace Lam,Wed,18:00,20:00,F402,2026S
+ECON1168,Academic Writing,A,Helen Zhao,Thu,08:30,10:00,A101,2025F
+ART1169,Digital Design,B,Michael Tan,Fri,10:00,11:30,A108,2025S
+COMP1170,Cloud Computing,C,Sarah Liu,Mon,11:30,13:00,A202,2026F
+MATH1171,Network Security,D,Daniel Wu,Tue,13:00,14:30,B201,2026S
+STAT1172,Artificial Intelligence,A,Emma Chen,Wed,14:30,16:00,B202,2025F
+BUS1173,Web Development,B,Robert Young,Thu,16:00,17:30,B301,2025S
+ENG1174,Linear Algebra,C,Anna Wang,Fri,18:00,20:00,C105,2026F
+PHYS1175,Discrete Mathematics,D,Victor Lam,Mon,08:30,10:00,C301,2026S
+CHEM1176,Project Management,A,John Lee,Tue,10:00,11:30,D210,2025F
+BIO1177,Information Systems,B,Alice Chan,Wed,11:30,13:00,D305,2025S
+ECON1178,Cybersecurity Fundamentals,C,Mary Wong,Thu,13:00,14:30,E110,2026F
+ART1179,Machine Learning,D,David Smith,Fri,14:30,16:00,F402,2026S
+COMP1180,Data Communications,A,Kevin Brown,Mon,16:00,17:30,A101,2025F
+MATH1181,Operating Systems,B,Lisa Chen,Tue,18:00,20:00,A108,2025S
+STAT1182,Database Systems,C,Peter Ho,Wed,08:30,10:00,A202,2026F
+BUS1183,Software Engineering,D,Grace Lam,Thu,10:00,11:30,B201,2026S
+ENG1184,Computer Networks,A,Helen Zhao,Fri,11:30,13:00,B202,2025F
+PHYS1185,Calculus,B,Michael Tan,Mon,13:00,14:30,B301,2025S
+CHEM1186,Probability and Statistics,C,Sarah Liu,Tue,14:30,16:00,C105,2026F
+BIO1187,Business Analytics,D,Daniel Wu,Wed,16:00,17:30,C301,2026S
+ECON1188,Academic Writing,A,Emma Chen,Thu,18:00,20:00,D210,2025F
+ART1189,Digital Design,B,Robert Young,Fri,08:30,10:00,D305,2025S
+COMP1190,Cloud Computing,C,Anna Wang,Mon,10:00,11:30,E110,2026F
+MATH1191,Network Security,D,Victor Lam,Tue,11:30,13:00,F402,2026S
+STAT1192,Artificial Intelligence,A,John Lee,Wed,13:00,14:30,A101,2025F
+BUS1193,Web Development,B,Alice Chan,Thu,14:30,16:00,A108,2025S
+ENG1194,Linear Algebra,C,Mary Wong,Fri,16:00,17:30,A202,2026F
+PHYS1195,Discrete Mathematics,D,David Smith,Mon,18:00,20:00,B201,2026S
+CHEM1196,Project Management,A,Kevin Brown,Tue,08:30,10:00,B202,2025F
+BIO1197,Information Systems,B,Lisa Chen,Wed,10:00,11:30,B301,2025S
+ECON1198,Cybersecurity Fundamentals,C,Peter Ho,Thu,11:30,13:00,C105,2026F
+ART1199,Machine Learning,D,Grace Lam,Fri,13:00,14:30,C301,2026S
+COMP1200,Data Communications,A,Helen Zhao,Mon,14:30,16:00,D210,2025F
+MATH1201,Operating Systems,B,Michael Tan,Tue,16:00,17:30,D305,2025S
+STAT1202,Database Systems,C,Sarah Liu,Wed,18:00,20:00,E110,2026F
+BUS1203,Software Engineering,D,Daniel Wu,Thu,08:30,10:00,F402,2026S
+ENG1204,Computer Networks,A,Emma Chen,Fri,10:00,11:30,A101,2025F
+PHYS1205,Calculus,B,Robert Young,Mon,11:30,13:00,A108,2025S
+CHEM1206,Probability and Statistics,C,Anna Wang,Tue,13:00,14:30,A202,2026F
+BIO1207,Business Analytics,D,Victor Lam,Wed,14:30,16:00,B201,2026S
+ECON1208,Academic Writing,A,John Lee,Thu,16:00,17:30,B202,2025F
+ART1209,Digital Design,B,Alice Chan,Fri,18:00,20:00,B301,2025S
+COMP1210,Cloud Computing,C,Mary Wong,Mon,08:30,10:00,C105,2026F
+MATH1211,Network Security,D,David Smith,Tue,10:00,11:30,C301,2026S
+STAT1212,Artificial Intelligence,A,Kevin Brown,Wed,11:30,13:00,D210,2025F
+BUS1213,Web Development,B,Lisa Chen,Thu,13:00,14:30,D305,2025S
+ENG1214,Linear Algebra,C,Peter Ho,Fri,14:30,16:00,E110,2026F
+PHYS1215,Discrete Mathematics,D,Grace Lam,Mon,16:00,17:30,F402,2026S
+CHEM1216,Project Management,A,Helen Zhao,Tue,18:00,20:00,A101,2025F
+BIO1217,Information Systems,B,Michael Tan,Wed,08:30,10:00,A108,2025S
+ECON1218,Cybersecurity Fundamentals,C,Sarah Liu,Thu,10:00,11:30,A202,2026F
+ART1219,Machine Learning,D,Daniel Wu,Fri,11:30,13:00,B201,2026S
+COMP1220,Data Communications,A,Emma Chen,Mon,13:00,14:30,B202,2025F
+MATH1221,Operating Systems,B,Robert Young,Tue,14:30,16:00,B301,2025S
+STAT1222,Database Systems,C,Anna Wang,Wed,16:00,17:30,C105,2026F
+BUS1223,Software Engineering,D,Victor Lam,Thu,18:00,20:00,C301,2026S
+ENG1224,Computer Networks,A,John Lee,Fri,08:30,10:00,D210,2025F
+PHYS1225,Calculus,B,Alice Chan,Mon,10:00,11:30,D305,2025S
+CHEM1226,Probability and Statistics,C,Mary Wong,Tue,11:30,13:00,E110,2026F
+BIO1227,Business Analytics,D,David Smith,Wed,13:00,14:30,F402,2026S
+ECON1228,Academic Writing,A,Kevin Brown,Thu,14:30,16:00,A101,2025F
+ART1229,Digital Design,B,Lisa Chen,Fri,16:00,17:30,A108,2025S
+COMP1230,Cloud Computing,C,Peter Ho,Mon,18:00,20:00,A202,2026F
+MATH1231,Network Security,D,Grace Lam,Tue,08:30,10:00,B201,2026S
+STAT1232,Artificial Intelligence,A,Helen Zhao,Wed,10:00,11:30,B202,2025F
+BUS1233,Web Development,B,Michael Tan,Thu,11:30,13:00,B301,2025S
+ENG1234,Linear Algebra,C,Sarah Liu,Fri,13:00,14:30,C105,2026F
+PHYS1235,Discrete Mathematics,D,Daniel Wu,Mon,14:30,16:00,C301,2026S
+CHEM1236,Project Management,A,Emma Chen,Tue,16:00,17:30,D210,2025F
+BIO1237,Information Systems,B,Robert Young,Wed,18:00,20:00,D305,2025S
+ECON1238,Cybersecurity Fundamentals,C,Anna Wang,Thu,08:30,10:00,E110,2026F
+ART1239,Machine Learning,D,Victor Lam,Fri,10:00,11:30,F402,2026S
+COMP1240,Data Communications,A,John Lee,Mon,11:30,13:00,A101,2025F
+MATH1241,Operating Systems,B,Alice Chan,Tue,13:00,14:30,A108,2025S
+STAT1242,Database Systems,C,Mary Wong,Wed,14:30,16:00,A202,2026F
+BUS1243,Software Engineering,D,David Smith,Thu,16:00,17:30,B201,2026S
+ENG1244,Computer Networks,A,Kevin Brown,Fri,18:00,20:00,B202,2025F
+PHYS1245,Calculus,B,Lisa Chen,Mon,08:30,10:00,B301,2025S
+CHEM1246,Probability and Statistics,C,Peter Ho,Tue,10:00,11:30,C105,2026F
+BIO1247,Business Analytics,D,Grace Lam,Wed,11:30,13:00,C301,2026S
+ECON1248,Academic Writing,A,Helen Zhao,Thu,13:00,14:30,D210,2025F
+ART1249,Digital Design,B,Michael Tan,Fri,14:30,16:00,D305,2025S
+COMP1250,Cloud Computing,C,Sarah Liu,Mon,16:00,17:30,E110,2026F
+MATH1251,Network Security,D,Daniel Wu,Tue,18:00,20:00,F402,2026S
+STAT1252,Artificial Intelligence,A,Emma Chen,Wed,08:30,10:00,A101,2025F
+BUS1253,Web Development,B,Robert Young,Thu,10:00,11:30,A108,2025S
+ENG1254,Linear Algebra,C,Anna Wang,Fri,11:30,13:00,A202,2026F
+PHYS1255,Discrete Mathematics,D,Victor Lam,Mon,13:00,14:30,B201,2026S
+CHEM1256,Project Management,A,John Lee,Tue,14:30,16:00,B202,2025F
+BIO1257,Information Systems,B,Alice Chan,Wed,16:00,17:30,B301,2025S
+ECON1258,Cybersecurity Fundamentals,C,Mary Wong,Thu,18:00,20:00,C105,2026F
+ART1259,Machine Learning,D,David Smith,Fri,08:30,10:00,C301,2026S
+COMP1260,Data Communications,A,Kevin Brown,Mon,10:00,11:30,D210,2025F
+MATH1261,Operating Systems,B,Lisa Chen,Tue,11:30,13:00,D305,2025S
+STAT1262,Database Systems,C,Peter Ho,Wed,13:00,14:30,E110,2026F
+BUS1263,Software Engineering,D,Grace Lam,Thu,14:30,16:00,F402,2026S
+ENG1264,Computer Networks,A,Helen Zhao,Fri,16:00,17:30,A101,2025F
+PHYS1265,Calculus,B,Michael Tan,Mon,18:00,20:00,A108,2025S
+CHEM1266,Probability and Statistics,C,Sarah Liu,Tue,08:30,10:00,A202,2026F
+BIO1267,Business Analytics,D,Daniel Wu,Wed,10:00,11:30,B201,2026S
+ECON1268,Academic Writing,A,Emma Chen,Thu,11:30,13:00,B202,2025F
+ART1269,Digital Design,B,Robert Young,Fri,13:00,14:30,B301,2025S
+COMP1270,Cloud Computing,C,Anna Wang,Mon,14:30,16:00,C105,2026F
+MATH1271,Network Security,D,Victor Lam,Tue,16:00,17:30,C301,2026S
+STAT1272,Artificial Intelligence,A,John Lee,Wed,18:00,20:00,D210,2025F
+BUS1273,Web Development,B,Alice Chan,Thu,08:30,10:00,D305,2025S
+ENG1274,Linear Algebra,C,Mary Wong,Fri,10:00,11:30,E110,2026F
+PHYS1275,Discrete Mathematics,D,David Smith,Mon,11:30,13:00,F402,2026S
+CHEM1276,Project Management,A,Kevin Brown,Tue,13:00,14:30,A101,2025F
+BIO1277,Information Systems,B,Lisa Chen,Wed,14:30,16:00,A108,2025S
+ECON1278,Cybersecurity Fundamentals,C,Peter Ho,Thu,16:00,17:30,A202,2026F
+ART1279,Machine Learning,D,Grace Lam,Fri,18:00,20:00,B201,2026S
+COMP1280,Data Communications,A,Helen Zhao,Mon,08:30,10:00,B202,2025F
+MATH1281,Operating Systems,B,Michael Tan,Tue,10:00,11:30,B301,2025S
+STAT1282,Database Systems,C,Sarah Liu,Wed,11:30,13:00,C105,2026F
+BUS1283,Software Engineering,D,Daniel Wu,Thu,13:00,14:30,C301,2026S
+ENG1284,Computer Networks,A,Emma Chen,Fri,14:30,16:00,D210,2025F
+PHYS1285,Calculus,B,Robert Young,Mon,16:00,17:30,D305,2025S
+CHEM1286,Probability and Statistics,C,Anna Wang,Tue,18:00,20:00,E110,2026F
+BIO1287,Business Analytics,D,Victor Lam,Wed,08:30,10:00,F402,2026S
+ECON1288,Academic Writing,A,John Lee,Thu,10:00,11:30,A101,2025F
+ART1289,Digital Design,B,Alice Chan,Fri,11:30,13:00,A108,2025S
+COMP1290,Cloud Computing,C,Mary Wong,Mon,13:00,14:30,A202,2026F
+MATH1291,Network Security,D,David Smith,Tue,14:30,16:00,B201,2026S
+STAT1292,Artificial Intelligence,A,Kevin Brown,Wed,16:00,17:30,B202,2025F
+BUS1293,Web Development,B,Lisa Chen,Thu,18:00,20:00,B301,2025S
+ENG1294,Linear Algebra,C,Peter Ho,Fri,08:30,10:00,C105,2026F
+PHYS1295,Discrete Mathematics,D,Grace Lam,Mon,10:00,11:30,C301,2026S
+CHEM1296,Project Management,A,Helen Zhao,Tue,11:30,13:00,D210,2025F
+BIO1297,Information Systems,B,Michael Tan,Wed,13:00,14:30,D305,2025S
+ECON1298,Cybersecurity Fundamentals,C,Sarah Liu,Thu,14:30,16:00,E110,2026F
+ART1299,Machine Learning,D,Daniel Wu,Fri,16:00,17:30,F402,2026S
+COMP1300,Data Communications,A,Emma Chen,Mon,18:00,20:00,A101,2025F
+MATH1301,Operating Systems,B,Robert Young,Tue,08:30,10:00,A108,2025S
+STAT1302,Database Systems,C,Anna Wang,Wed,10:00,11:30,A202,2026F
+BUS1303,Software Engineering,D,Victor Lam,Thu,11:30,13:00,B201,2026S
+ENG1304,Computer Networks,A,John Lee,Fri,13:00,14:30,B202,2025F
+PHYS1305,Calculus,B,Alice Chan,Mon,14:30,16:00,B301,2025S
+CHEM1306,Probability and Statistics,C,Mary Wong,Tue,16:00,17:30,C105,2026F
+BIO1307,Business Analytics,D,David Smith,Wed,18:00,20:00,C301,2026S
+ECON1308,Academic Writing,A,Kevin Brown,Thu,08:30,10:00,D210,2025F
+ART1309,Digital Design,B,Lisa Chen,Fri,10:00,11:30,D305,2025S
+COMP1310,Cloud Computing,C,Peter Ho,Mon,11:30,13:00,E110,2026F
+MATH1311,Network Security,D,Grace Lam,Tue,13:00,14:30,F402,2026S
+STAT1312,Artificial Intelligence,A,Helen Zhao,Wed,14:30,16:00,A101,2025F
+BUS1313,Web Development,B,Michael Tan,Thu,16:00,17:30,A108,2025S
+ENG1314,Linear Algebra,C,Sarah Liu,Fri,18:00,20:00,A202,2026F
+PHYS1315,Discrete Mathematics,D,Daniel Wu,Mon,08:30,10:00,B201,2026S
+CHEM1316,Project Management,A,Emma Chen,Tue,10:00,11:30,B202,2025F
+BIO1317,Information Systems,B,Robert Young,Wed,11:30,13:00,B301,2025S
+ECON1318,Cybersecurity Fundamentals,C,Anna Wang,Thu,13:00,14:30,C105,2026F
+ART1319,Machine Learning,D,Victor Lam,Fri,14:30,16:00,C301,2026S
+COMP1320,Data Communications,A,John Lee,Mon,16:00,17:30,D210,2025F
+MATH1321,Operating Systems,B,Alice Chan,Tue,18:00,20:00,D305,2025S
+STAT1322,Database Systems,C,Mary Wong,Wed,08:30,10:00,E110,2026F
+BUS1323,Software Engineering,D,David Smith,Thu,10:00,11:30,F402,2026S
+ENG1324,Computer Networks,A,Kevin Brown,Fri,11:30,13:00,A101,2025F
+PHYS1325,Calculus,B,Lisa Chen,Mon,13:00,14:30,A108,2025S
+CHEM1326,Probability and Statistics,C,Peter Ho,Tue,14:30,16:00,A202,2026F
+BIO1327,Business Analytics,D,Grace Lam,Wed,16:00,17:30,B201,2026S
+ECON1328,Academic Writing,A,Helen Zhao,Thu,18:00,20:00,B202,2025F
+ART1329,Digital Design,B,Michael Tan,Fri,08:30,10:00,B301,2025S
+COMP1330,Cloud Computing,C,Sarah Liu,Mon,10:00,11:30,C105,2026F
+MATH1331,Network Security,D,Daniel Wu,Tue,11:30,13:00,C301,2026S
+STAT1332,Artificial Intelligence,A,Emma Chen,Wed,13:00,14:30,D210,2025F
+BUS1333,Web Development,B,Robert Young,Thu,14:30,16:00,D305,2025S
+ENG1334,Linear Algebra,C,Anna Wang,Fri,16:00,17:30,E110,2026F
+PHYS1335,Discrete Mathematics,D,Victor Lam,Mon,18:00,20:00,F402,2026S
+CHEM1336,Project Management,A,John Lee,Tue,08:30,10:00,A101,2025F
+BIO1337,Information Systems,B,Alice Chan,Wed,10:00,11:30,A108,2025S
+ECON1338,Cybersecurity Fundamentals,C,Mary Wong,Thu,11:30,13:00,A202,2026F
+ART1339,Machine Learning,D,David Smith,Fri,13:00,14:30,B201,2026S
+COMP1340,Data Communications,A,Kevin Brown,Mon,14:30,16:00,B202,2025F
+MATH1341,Operating Systems,B,Lisa Chen,Tue,16:00,17:30,B301,2025S
+STAT1342,Database Systems,C,Peter Ho,Wed,18:00,20:00,C105,2026F
+BUS1343,Software Engineering,D,Grace Lam,Thu,08:30,10:00,C301,2026S
+ENG1344,Computer Networks,A,Helen Zhao,Fri,10:00,11:30,D210,2025F
+PHYS1345,Calculus,B,Michael Tan,Mon,11:30,13:00,D305,2025S
+CHEM1346,Probability and Statistics,C,Sarah Liu,Tue,13:00,14:30,E110,2026F
+BIO1347,Business Analytics,D,Daniel Wu,Wed,14:30,16:00,F402,2026S
+ECON1348,Academic Writing,A,Emma Chen,Thu,16:00,17:30,A101,2025F
+ART1349,Digital Design,B,Robert Young,Fri,18:00,20:00,A108,2025S
+COMP1350,Cloud Computing,C,Anna Wang,Mon,08:30,10:00,A202,2026F
+MATH1351,Network Security,D,Victor Lam,Tue,10:00,11:30,B201,2026S
+STAT1352,Artificial Intelligence,A,John Lee,Wed,11:30,13:00,B202,2025F
+BUS1353,Web Development,B,Alice Chan,Thu,13:00,14:30,B301,2025S
+ENG1354,Linear Algebra,C,Mary Wong,Fri,14:30,16:00,C105,2026F
+PHYS1355,Discrete Mathematics,D,David Smith,Mon,16:00,17:30,C301,2026S
+CHEM1356,Project Management,A,Kevin Brown,Tue,18:00,20:00,D210,2025F
+BIO1357,Information Systems,B,Lisa Chen,Wed,08:30,10:00,D305,2025S
+ECON1358,Cybersecurity Fundamentals,C,Peter Ho,Thu,10:00,11:30,E110,2026F
+ART1359,Machine Learning,D,Grace Lam,Fri,11:30,13:00,F402,2026S
+COMP1360,Data Communications,A,Helen Zhao,Mon,13:00,14:30,A101,2025F
+MATH1361,Operating Systems,B,Michael Tan,Tue,14:30,16:00,A108,2025S
+STAT1362,Database Systems,C,Sarah Liu,Wed,16:00,17:30,A202,2026F
+BUS1363,Software Engineering,D,Daniel Wu,Thu,18:00,20:00,B201,2026S
+ENG1364,Computer Networks,A,Emma Chen,Fri,08:30,10:00,B202,2025F
+PHYS1365,Calculus,B,Robert Young,Mon,10:00,11:30,B301,2025S
+CHEM1366,Probability and Statistics,C,Anna Wang,Tue,11:30,13:00,C105,2026F
+BIO1367,Business Analytics,D,Victor Lam,Wed,13:00,14:30,C301,2026S
+ECON1368,Academic Writing,A,John Lee,Thu,14:30,16:00,D210,2025F
+ART1369,Digital Design,B,Alice Chan,Fri,16:00,17:30,D305,2025S
+COMP1370,Cloud Computing,C,Mary Wong,Mon,18:00,20:00,E110,2026F
+MATH1371,Network Security,D,David Smith,Tue,08:30,10:00,F402,2026S
+STAT1372,Artificial Intelligence,A,Kevin Brown,Wed,10:00,11:30,A101,2025F
+BUS1373,Web Development,B,Lisa Chen,Thu,11:30,13:00,A108,2025S
+ENG1374,Linear Algebra,C,Peter Ho,Fri,13:00,14:30,A202,2026F
+PHYS1375,Discrete Mathematics,D,Grace Lam,Mon,14:30,16:00,B201,2026S
+CHEM1376,Project Management,A,Helen Zhao,Tue,16:00,17:30,B202,2025F
+BIO1377,Information Systems,B,Michael Tan,Wed,18:00,20:00,B301,2025S
+ECON1378,Cybersecurity Fundamentals,C,Sarah Liu,Thu,08:30,10:00,C105,2026F
+ART1379,Machine Learning,D,Daniel Wu,Fri,10:00,11:30,C301,2026S
+COMP1380,Data Communications,A,Emma Chen,Mon,11:30,13:00,D210,2025F
+MATH1381,Operating Systems,B,Robert Young,Tue,13:00,14:30,D305,2025S
+STAT1382,Database Systems,C,Anna Wang,Wed,14:30,16:00,E110,2026F
+BUS1383,Software Engineering,D,Victor Lam,Thu,16:00,17:30,F402,2026S
+ENG1384,Computer Networks,A,John Lee,Fri,18:00,20:00,A101,2025F
+PHYS1385,Calculus,B,Alice Chan,Mon,08:30,10:00,A108,2025S
+CHEM1386,Probability and Statistics,C,Mary Wong,Tue,10:00,11:30,A202,2026F
+BIO1387,Business Analytics,D,David Smith,Wed,11:30,13:00,B201,2026S
+ECON1388,Academic Writing,A,Kevin Brown,Thu,13:00,14:30,B202,2025F
+ART1389,Digital Design,B,Lisa Chen,Fri,14:30,16:00,B301,2025S
+COMP1390,Cloud Computing,C,Peter Ho,Mon,16:00,17:30,C105,2026F
+MATH1391,Network Security,D,Grace Lam,Tue,18:00,20:00,C301,2026S
+STAT1392,Artificial Intelligence,A,Helen Zhao,Wed,08:30,10:00,D210,2025F
+BUS1393,Web Development,B,Michael Tan,Thu,10:00,11:30,D305,2025S
+ENG1394,Linear Algebra,C,Sarah Liu,Fri,11:30,13:00,E110,2026F
+PHYS1395,Discrete Mathematics,D,Daniel Wu,Mon,13:00,14:30,F402,2026S
+CHEM1396,Project Management,A,Emma Chen,Tue,14:30,16:00,A101,2025F
+BIO1397,Information Systems,B,Robert Young,Wed,16:00,17:30,A108,2025S
+ECON1398,Cybersecurity Fundamentals,C,Anna Wang,Thu,18:00,20:00,A202,2026F
+ART1399,Machine Learning,D,Victor Lam,Fri,08:30,10:00,B201,2026S
+COMP1400,Data Communications,A,John Lee,Mon,10:00,11:30,B202,2025F
+MATH1401,Operating Systems,B,Alice Chan,Tue,11:30,13:00,B301,2025S
+STAT1402,Database Systems,C,Mary Wong,Wed,13:00,14:30,C105,2026F
+BUS1403,Software Engineering,D,David Smith,Thu,14:30,16:00,C301,2026S
+ENG1404,Computer Networks,A,Kevin Brown,Fri,16:00,17:30,D210,2025F
+PHYS1405,Calculus,B,Lisa Chen,Mon,18:00,20:00,D305,2025S
+CHEM1406,Probability and Statistics,C,Peter Ho,Tue,08:30,10:00,E110,2026F
+BIO1407,Business Analytics,D,Grace Lam,Wed,10:00,11:30,F402,2026S
+ECON1408,Academic Writing,A,Helen Zhao,Thu,11:30,13:00,A101,2025F
+ART1409,Digital Design,B,Michael Tan,Fri,13:00,14:30,A108,2025S
+COMP1410,Cloud Computing,C,Sarah Liu,Mon,14:30,16:00,A202,2026F
+MATH1411,Network Security,D,Daniel Wu,Tue,16:00,17:30,B201,2026S
+STAT1412,Artificial Intelligence,A,Emma Chen,Wed,18:00,20:00,B202,2025F
+BUS1413,Web Development,B,Robert Young,Thu,08:30,10:00,B301,2025S
+ENG1414,Linear Algebra,C,Anna Wang,Fri,10:00,11:30,C105,2026F
+PHYS1415,Discrete Mathematics,D,Victor Lam,Mon,11:30,13:00,C301,2026S
+CHEM1416,Project Management,A,John Lee,Tue,13:00,14:30,D210,2025F
+BIO1417,Information Systems,B,Alice Chan,Wed,14:30,16:00,D305,2025S
+ECON1418,Cybersecurity Fundamentals,C,Mary Wong,Thu,16:00,17:30,E110,2026F
+ART1419,Machine Learning,D,David Smith,Fri,18:00,20:00,F402,2026S
+COMP1420,Data Communications,A,Kevin Brown,Mon,08:30,10:00,A101,2025F
+MATH1421,Operating Systems,B,Lisa Chen,Tue,10:00,11:30,A108,2025S
+STAT1422,Database Systems,C,Peter Ho,Wed,11:30,13:00,A202,2026F
+BUS1423,Software Engineering,D,Grace Lam,Thu,13:00,14:30,B201,2026S
+ENG1424,Computer Networks,A,Helen Zhao,Fri,14:30,16:00,B202,2025F
+PHYS1425,Calculus,B,Michael Tan,Mon,16:00,17:30,B301,2025S
+CHEM1426,Probability and Statistics,C,Sarah Liu,Tue,18:00,20:00,C105,2026F
+BIO1427,Business Analytics,D,Daniel Wu,Wed,08:30,10:00,C301,2026S
+ECON1428,Academic Writing,A,Emma Chen,Thu,10:00,11:30,D210,2025F
+ART1429,Digital Design,B,Robert Young,Fri,11:30,13:00,D305,2025S
+COMP1430,Cloud Computing,C,Anna Wang,Mon,13:00,14:30,E110,2026F
+MATH1431,Network Security,D,Victor Lam,Tue,14:30,16:00,F402,2026S
+STAT1432,Artificial Intelligence,A,John Lee,Wed,16:00,17:30,A101,2025F
+BUS1433,Web Development,B,Alice Chan,Thu,18:00,20:00,A108,2025S
+ENG1434,Linear Algebra,C,Mary Wong,Fri,08:30,10:00,A202,2026F
+PHYS1435,Discrete Mathematics,D,David Smith,Mon,10:00,11:30,B201,2026S
+CHEM1436,Project Management,A,Kevin Brown,Tue,11:30,13:00,B202,2025F
+BIO1437,Information Systems,B,Lisa Chen,Wed,13:00,14:30,B301,2025S
+ECON1438,Cybersecurity Fundamentals,C,Peter Ho,Thu,14:30,16:00,C105,2026F
+ART1439,Machine Learning,D,Grace Lam,Fri,16:00,17:30,C301,2026S
+COMP1440,Data Communications,A,Helen Zhao,Mon,18:00,20:00,D210,2025F
+MATH1441,Operating Systems,B,Michael Tan,Tue,08:30,10:00,D305,2025S
+STAT1442,Database Systems,C,Sarah Liu,Wed,10:00,11:30,E110,2026F
+BUS1443,Software Engineering,D,Daniel Wu,Thu,11:30,13:00,F402,2026S
+ENG1444,Computer Networks,A,Emma Chen,Fri,13:00,14:30,A101,2025F
+PHYS1445,Calculus,B,Robert Young,Mon,14:30,16:00,A108,2025S
+CHEM1446,Probability and Statistics,C,Anna Wang,Tue,16:00,17:30,A202,2026F
+BIO1447,Business Analytics,D,Victor Lam,Wed,18:00,20:00,B201,2026S
+ECON1448,Academic Writing,A,John Lee,Thu,08:30,10:00,B202,2025F
+ART1449,Digital Design,B,Alice Chan,Fri,10:00,11:30,B301,2025S
+COMP1450,Cloud Computing,C,Mary Wong,Mon,11:30,13:00,C105,2026F
+MATH1451,Network Security,D,David Smith,Tue,13:00,14:30,C301,2026S
+STAT1452,Artificial Intelligence,A,Kevin Brown,Wed,14:30,16:00,D210,2025F
+BUS1453,Web Development,B,Lisa Chen,Thu,16:00,17:30,D305,2025S
+ENG1454,Linear Algebra,C,Peter Ho,Fri,18:00,20:00,E110,2026F
+PHYS1455,Discrete Mathematics,D,Grace Lam,Mon,08:30,10:00,F402,2026S
+CHEM1456,Project Management,A,Helen Zhao,Tue,10:00,11:30,A101,2025F
+BIO1457,Information Systems,B,Michael Tan,Wed,11:30,13:00,A108,2025S
+ECON1458,Cybersecurity Fundamentals,C,Sarah Liu,Thu,13:00,14:30,A202,2026F
+ART1459,Machine Learning,D,Daniel Wu,Fri,14:30,16:00,B201,2026S
+COMP1460,Data Communications,A,Emma Chen,Mon,16:00,17:30,B202,2025F
+MATH1461,Operating Systems,B,Robert Young,Tue,18:00,20:00,B301,2025S
+STAT1462,Database Systems,C,Anna Wang,Wed,08:30,10:00,C105,2026F
+BUS1463,Software Engineering,D,Victor Lam,Thu,10:00,11:30,C301,2026S
+ENG1464,Computer Networks,A,John Lee,Fri,11:30,13:00,D210,2025F
+PHYS1465,Calculus,B,Alice Chan,Mon,13:00,14:30,D305,2025S
+CHEM1466,Probability and Statistics,C,Mary Wong,Tue,14:30,16:00,E110,2026F
+BIO1467,Business Analytics,D,David Smith,Wed,16:00,17:30,F402,2026S
+ECON1468,Academic Writing,A,Kevin Brown,Thu,18:00,20:00,A101,2025F
+ART1469,Digital Design,B,Lisa Chen,Fri,08:30,10:00,A108,2025S
+COMP1470,Cloud Computing,C,Peter Ho,Mon,10:00,11:30,A202,2026F
+MATH1471,Network Security,D,Grace Lam,Tue,11:30,13:00,B201,2026S
+STAT1472,Artificial Intelligence,A,Helen Zhao,Wed,13:00,14:30,B202,2025F
+BUS1473,Web Development,B,Michael Tan,Thu,14:30,16:00,B301,2025S
+ENG1474,Linear Algebra,C,Sarah Liu,Fri,16:00,17:30,C105,2026F
+PHYS1475,Discrete Mathematics,D,Daniel Wu,Mon,18:00,20:00,C301,2026S
+CHEM1476,Project Management,A,Emma Chen,Tue,08:30,10:00,D210,2025F
+BIO1477,Information Systems,B,Robert Young,Wed,10:00,11:30,D305,2025S
+ECON1478,Cybersecurity Fundamentals,C,Anna Wang,Thu,11:30,13:00,E110,2026F
+ART1479,Machine Learning,D,Victor Lam,Fri,13:00,14:30,F402,2026S
+COMP1480,Data Communications,A,John Lee,Mon,14:30,16:00,A101,2025F
+MATH1481,Operating Systems,B,Alice Chan,Tue,16:00,17:30,A108,2025S
+STAT1482,Database Systems,C,Mary Wong,Wed,18:00,20:00,A202,2026F
+BUS1483,Software Engineering,D,David Smith,Thu,08:30,10:00,B201,2026S
+ENG1484,Computer Networks,A,Kevin Brown,Fri,10:00,11:30,B202,2025F
+PHYS1485,Calculus,B,Lisa Chen,Mon,11:30,13:00,B301,2025S
+CHEM1486,Probability and Statistics,C,Peter Ho,Tue,13:00,14:30,C105,2026F
+BIO1487,Business Analytics,D,Grace Lam,Wed,14:30,16:00,C301,2026S
+ECON1488,Academic Writing,A,Helen Zhao,Thu,16:00,17:30,D210,2025F
+ART1489,Digital Design,B,Michael Tan,Fri,18:00,20:00,D305,2025S
+COMP1490,Cloud Computing,C,Sarah Liu,Mon,08:30,10:00,E110,2026F
+MATH1491,Network Security,D,Daniel Wu,Tue,10:00,11:30,F402,2026S
+STAT1492,Artificial Intelligence,A,Emma Chen,Wed,11:30,13:00,A101,2025F
+BUS1493,Web Development,B,Robert Young,Thu,13:00,14:30,A108,2025S
+ENG1494,Linear Algebra,C,Anna Wang,Fri,14:30,16:00,A202,2026F
+PHYS1495,Discrete Mathematics,D,Victor Lam,Mon,16:00,17:30,B201,2026S
+CHEM1496,Project Management,A,John Lee,Tue,18:00,20:00,B202,2025F
+BIO1497,Information Systems,B,Alice Chan,Wed,08:30,10:00,B301,2025S
+ECON1498,Cybersecurity Fundamentals,C,Mary Wong,Thu,10:00,11:30,C105,2026F
+ART1499,Machine Learning,D,David Smith,Fri,11:30,13:00,C301,2026S
+COMP1500,Data Communications,A,Kevin Brown,Mon,13:00,14:30,D210,2025F
+MATH1501,Operating Systems,B,Lisa Chen,Tue,14:30,16:00,D305,2025S
+STAT1502,Database Systems,C,Peter Ho,Wed,16:00,17:30,E110,2026F
+BUS1503,Software Engineering,D,Grace Lam,Thu,18:00,20:00,F402,2026S
+ENG1504,Computer Networks,A,Helen Zhao,Fri,08:30,10:00,A101,2025F
+PHYS1505,Calculus,B,Michael Tan,Mon,10:00,11:30,A108,2025S
+CHEM1506,Probability and Statistics,C,Sarah Liu,Tue,11:30,13:00,A202,2026F
+BIO1507,Business Analytics,D,Daniel Wu,Wed,13:00,14:30,B201,2026S
+ECON1508,Academic Writing,A,Emma Chen,Thu,14:30,16:00,B202,2025F
+ART1509,Digital Design,B,Robert Young,Fri,16:00,17:30,B301,2025S
+COMP1510,Cloud Computing,C,Anna Wang,Mon,18:00,20:00,C105,2026F
+MATH1511,Network Security,D,Victor Lam,Tue,08:30,10:00,C301,2026S
+STAT1512,Artificial Intelligence,A,John Lee,Wed,10:00,11:30,D210,2025F
+BUS1513,Web Development,B,Alice Chan,Thu,11:30,13:00,D305,2025S
+ENG1514,Linear Algebra,C,Mary Wong,Fri,13:00,14:30,E110,2026F
+PHYS1515,Discrete Mathematics,D,David Smith,Mon,14:30,16:00,F402,2026S
+CHEM1516,Project Management,A,Kevin Brown,Tue,16:00,17:30,A101,2025F
+BIO1517,Information Systems,B,Lisa Chen,Wed,18:00,20:00,A108,2025S
+ECON1518,Cybersecurity Fundamentals,C,Peter Ho,Thu,08:30,10:00,A202,2026F
+ART1519,Machine Learning,D,Grace Lam,Fri,10:00,11:30,B201,2026S
+COMP1520,Data Communications,A,Helen Zhao,Mon,11:30,13:00,B202,2025F
+MATH1521,Operating Systems,B,Michael Tan,Tue,13:00,14:30,B301,2025S
+STAT1522,Database Systems,C,Sarah Liu,Wed,14:30,16:00,C105,2026F
+BUS1523,Software Engineering,D,Daniel Wu,Thu,16:00,17:30,C301,2026S
+ENG1524,Computer Networks,A,Emma Chen,Fri,18:00,20:00,D210,2025F
+PHYS1525,Calculus,B,Robert Young,Mon,08:30,10:00,D305,2025S
+CHEM1526,Probability and Statistics,C,Anna Wang,Tue,10:00,11:30,E110,2026F
+BIO1527,Business Analytics,D,Victor Lam,Wed,11:30,13:00,F402,2026S
+ECON1528,Academic Writing,A,John Lee,Thu,13:00,14:30,A101,2025F
+ART1529,Digital Design,B,Alice Chan,Fri,14:30,16:00,A108,2025S
+COMP1530,Cloud Computing,C,Mary Wong,Mon,16:00,17:30,A202,2026F
+MATH1531,Network Security,D,David Smith,Tue,18:00,20:00,B201,2026S
+STAT1532,Artificial Intelligence,A,Kevin Brown,Wed,08:30,10:00,B202,2025F
+BUS1533,Web Development,B,Lisa Chen,Thu,10:00,11:30,B301,2025S
+ENG1534,Linear Algebra,C,Peter Ho,Fri,11:30,13:00,C105,2026F
+PHYS1535,Discrete Mathematics,D,Grace Lam,Mon,13:00,14:30,C301,2026S
+CHEM1536,Project Management,A,Helen Zhao,Tue,14:30,16:00,D210,2025F
+BIO1537,Information Systems,B,Michael Tan,Wed,16:00,17:30,D305,2025S
+ECON1538,Cybersecurity Fundamentals,C,Sarah Liu,Thu,18:00,20:00,E110,2026F
+ART1539,Machine Learning,D,Daniel Wu,Fri,08:30,10:00,F402,2026S
+COMP1540,Data Communications,A,Emma Chen,Mon,10:00,11:30,A101,2025F
+MATH1541,Operating Systems,B,Robert Young,Tue,11:30,13:00,A108,2025S
+STAT1542,Database Systems,C,Anna Wang,Wed,13:00,14:30,A202,2026F
+BUS1543,Software Engineering,D,Victor Lam,Thu,14:30,16:00,B201,2026S
+ENG1544,Computer Networks,A,John Lee,Fri,16:00,17:30,B202,2025F
+PHYS1545,Calculus,B,Alice Chan,Mon,18:00,20:00,B301,2025S
+CHEM1546,Probability and Statistics,C,Mary Wong,Tue,08:30,10:00,C105,2026F
+BIO1547,Business Analytics,D,David Smith,Wed,10:00,11:30,C301,2026S
+ECON1548,Academic Writing,A,Kevin Brown,Thu,11:30,13:00,D210,2025F
+ART1549,Digital Design,B,Lisa Chen,Fri,13:00,14:30,D305,2025S
+COMP1550,Cloud Computing,C,Peter Ho,Mon,14:30,16:00,E110,2026F
+MATH1551,Network Security,D,Grace Lam,Tue,16:00,17:30,F402,2026S
+STAT1552,Artificial Intelligence,A,Helen Zhao,Wed,18:00,20:00,A101,2025F
+BUS1553,Web Development,B,Michael Tan,Thu,08:30,10:00,A108,2025S
+ENG1554,Linear Algebra,C,Sarah Liu,Fri,10:00,11:30,A202,2026F
+PHYS1555,Discrete Mathematics,D,Daniel Wu,Mon,11:30,13:00,B201,2026S
+CHEM1556,Project Management,A,Emma Chen,Tue,13:00,14:30,B202,2025F
+BIO1557,Information Systems,B,Robert Young,Wed,14:30,16:00,B301,2025S
+ECON1558,Cybersecurity Fundamentals,C,Anna Wang,Thu,16:00,17:30,C105,2026F
+ART1559,Machine Learning,D,Victor Lam,Fri,18:00,20:00,C301,2026S
+COMP1560,Data Communications,A,John Lee,Mon,08:30,10:00,D210,2025F
+MATH1561,Operating Systems,B,Alice Chan,Tue,10:00,11:30,D305,2025S
+STAT1562,Database Systems,C,Mary Wong,Wed,11:30,13:00,E110,2026F
+BUS1563,Software Engineering,D,David Smith,Thu,13:00,14:30,F402,2026S
+ENG1564,Computer Networks,A,Kevin Brown,Fri,14:30,16:00,A101,2025F
+PHYS1565,Calculus,B,Lisa Chen,Mon,16:00,17:30,A108,2025S
+CHEM1566,Probability and Statistics,C,Peter Ho,Tue,18:00,20:00,A202,2026F
+BIO1567,Business Analytics,D,Grace Lam,Wed,08:30,10:00,B201,2026S
+ECON1568,Academic Writing,A,Helen Zhao,Thu,10:00,11:30,B202,2025F
+ART1569,Digital Design,B,Michael Tan,Fri,11:30,13:00,B301,2025S
+COMP1570,Cloud Computing,C,Sarah Liu,Mon,13:00,14:30,C105,2026F
+MATH1571,Network Security,D,Daniel Wu,Tue,14:30,16:00,C301,2026S
+STAT1572,Artificial Intelligence,A,Emma Chen,Wed,16:00,17:30,D210,2025F
+BUS1573,Web Development,B,Robert Young,Thu,18:00,20:00,D305,2025S
+ENG1574,Linear Algebra,C,Anna Wang,Fri,08:30,10:00,E110,2026F
+PHYS1575,Discrete Mathematics,D,Victor Lam,Mon,10:00,11:30,F402,2026S
+CHEM1576,Project Management,A,John Lee,Tue,11:30,13:00,A101,2025F
+BIO1577,Information Systems,B,Alice Chan,Wed,13:00,14:30,A108,2025S
+ECON1578,Cybersecurity Fundamentals,C,Mary Wong,Thu,14:30,16:00,A202,2026F
+ART1579,Machine Learning,D,David Smith,Fri,16:00,17:30,B201,2026S
+COMP1580,Data Communications,A,Kevin Brown,Mon,18:00,20:00,B202,2025F
+MATH1581,Operating Systems,B,Lisa Chen,Tue,08:30,10:00,B301,2025S
+STAT1582,Database Systems,C,Peter Ho,Wed,10:00,11:30,C105,2026F
+BUS1583,Software Engineering,D,Grace Lam,Thu,11:30,13:00,C301,2026S
+ENG1584,Computer Networks,A,Helen Zhao,Fri,13:00,14:30,D210,2025F
+PHYS1585,Calculus,B,Michael Tan,Mon,14:30,16:00,D305,2025S
+CHEM1586,Probability and Statistics,C,Sarah Liu,Tue,16:00,17:30,E110,2026F
+BIO1587,Business Analytics,D,Daniel Wu,Wed,18:00,20:00,F402,2026S
+ECON1588,Academic Writing,A,Emma Chen,Thu,08:30,10:00,A101,2025F
+ART1589,Digital Design,B,Robert Young,Fri,10:00,11:30,A108,2025S
+COMP1590,Cloud Computing,C,Anna Wang,Mon,11:30,13:00,A202,2026F
+MATH1591,Network Security,D,Victor Lam,Tue,13:00,14:30,B201,2026S
+STAT1592,Artificial Intelligence,A,John Lee,Wed,14:30,16:00,B202,2025F
+BUS1593,Web Development,B,Alice Chan,Thu,16:00,17:30,B301,2025S
+ENG1594,Linear Algebra,C,Mary Wong,Fri,18:00,20:00,C105,2026F
+PHYS1595,Discrete Mathematics,D,David Smith,Mon,08:30,10:00,C301,2026S
+CHEM1596,Project Management,A,Kevin Brown,Tue,10:00,11:30,D210,2025F
+BIO1597,Information Systems,B,Lisa Chen,Wed,11:30,13:00,D305,2025S
+ECON1598,Cybersecurity Fundamentals,C,Peter Ho,Thu,13:00,14:30,E110,2026F
+ART1599,Machine Learning,D,Grace Lam,Fri,14:30,16:00,F402,2026S
+COMP1600,Data Communications,A,Helen Zhao,Mon,16:00,17:30,A101,2025F
+MATH1601,Operating Systems,B,Michael Tan,Tue,18:00,20:00,A108,2025S
+STAT1602,Database Systems,C,Sarah Liu,Wed,08:30,10:00,A202,2026F
+BUS1603,Software Engineering,D,Daniel Wu,Thu,10:00,11:30,B201,2026S
+ENG1604,Computer Networks,A,Emma Chen,Fri,11:30,13:00,B202,2025F
+PHYS1605,Calculus,B,Robert Young,Mon,13:00,14:30,B301,2025S
+CHEM1606,Probability and Statistics,C,Anna Wang,Tue,14:30,16:00,C105,2026F
+BIO1607,Business Analytics,D,Victor Lam,Wed,16:00,17:30,C301,2026S
+ECON1608,Academic Writing,A,John Lee,Thu,18:00,20:00,D210,2025F
+ART1609,Digital Design,B,Alice Chan,Fri,08:30,10:00,D305,2025S
+COMP1610,Cloud Computing,C,Mary Wong,Mon,10:00,11:30,E110,2026F
+MATH1611,Network Security,D,David Smith,Tue,11:30,13:00,F402,2026S
+STAT1612,Artificial Intelligence,A,Kevin Brown,Wed,13:00,14:30,A101,2025F
+BUS1613,Web Development,B,Lisa Chen,Thu,14:30,16:00,A108,2025S
+ENG1614,Linear Algebra,C,Peter Ho,Fri,16:00,17:30,A202,2026F
+PHYS1615,Discrete Mathematics,D,Grace Lam,Mon,18:00,20:00,B201,2026S
+CHEM1616,Project Management,A,Helen Zhao,Tue,08:30,10:00,B202,2025F
+BIO1617,Information Systems,B,Michael Tan,Wed,10:00,11:30,B301,2025S
+ECON1618,Cybersecurity Fundamentals,C,Sarah Liu,Thu,11:30,13:00,C105,2026F
+ART1619,Machine Learning,D,Daniel Wu,Fri,13:00,14:30,C301,2026S
+COMP1620,Data Communications,A,Emma Chen,Mon,14:30,16:00,D210,2025F
+MATH1621,Operating Systems,B,Robert Young,Tue,16:00,17:30,D305,2025S
+STAT1622,Database Systems,C,Anna Wang,Wed,18:00,20:00,E110,2026F
+BUS1623,Software Engineering,D,Victor Lam,Thu,08:30,10:00,F402,2026S
+ENG1624,Computer Networks,A,John Lee,Fri,10:00,11:30,A101,2025F
+PHYS1625,Calculus,B,Alice Chan,Mon,11:30,13:00,A108,2025S
+CHEM1626,Probability and Statistics,C,Mary Wong,Tue,13:00,14:30,A202,2026F
+BIO1627,Business Analytics,D,David Smith,Wed,14:30,16:00,B201,2026S
+ECON1628,Academic Writing,A,Kevin Brown,Thu,16:00,17:30,B202,2025F
+ART1629,Digital Design,B,Lisa Chen,Fri,18:00,20:00,B301,2025S
+COMP1630,Cloud Computing,C,Peter Ho,Mon,08:30,10:00,C105,2026F
+MATH1631,Network Security,D,Grace Lam,Tue,10:00,11:30,C301,2026S
+STAT1632,Artificial Intelligence,A,Helen Zhao,Wed,11:30,13:00,D210,2025F
+BUS1633,Web Development,B,Michael Tan,Thu,13:00,14:30,D305,2025S
+ENG1634,Linear Algebra,C,Sarah Liu,Fri,14:30,16:00,E110,2026F
+PHYS1635,Discrete Mathematics,D,Daniel Wu,Mon,16:00,17:30,F402,2026S
+CHEM1636,Project Management,A,Emma Chen,Tue,18:00,20:00,A101,2025F
+BIO1637,Information Systems,B,Robert Young,Wed,08:30,10:00,A108,2025S
+ECON1638,Cybersecurity Fundamentals,C,Anna Wang,Thu,10:00,11:30,A202,2026F
+ART1639,Machine Learning,D,Victor Lam,Fri,11:30,13:00,B201,2026S
+COMP1640,Data Communications,A,John Lee,Mon,13:00,14:30,B202,2025F
+MATH1641,Operating Systems,B,Alice Chan,Tue,14:30,16:00,B301,2025S
+STAT1642,Database Systems,C,Mary Wong,Wed,16:00,17:30,C105,2026F
+BUS1643,Software Engineering,D,David Smith,Thu,18:00,20:00,C301,2026S
+ENG1644,Computer Networks,A,Kevin Brown,Fri,08:30,10:00,D210,2025F
+PHYS1645,Calculus,B,Lisa Chen,Mon,10:00,11:30,D305,2025S
+CHEM1646,Probability and Statistics,C,Peter Ho,Tue,11:30,13:00,E110,2026F
+BIO1647,Business Analytics,D,Grace Lam,Wed,13:00,14:30,F402,2026S
+ECON1648,Academic Writing,A,Helen Zhao,Thu,14:30,16:00,A101,2025F
+ART1649,Digital Design,B,Michael Tan,Fri,16:00,17:30,A108,2025S
+COMP1650,Cloud Computing,C,Sarah Liu,Mon,18:00,20:00,A202,2026F
+MATH1651,Network Security,D,Daniel Wu,Tue,08:30,10:00,B201,2026S
+STAT1652,Artificial Intelligence,A,Emma Chen,Wed,10:00,11:30,B202,2025F
+BUS1653,Web Development,B,Robert Young,Thu,11:30,13:00,B301,2025S
+ENG1654,Linear Algebra,C,Anna Wang,Fri,13:00,14:30,C105,2026F
+PHYS1655,Discrete Mathematics,D,Victor Lam,Mon,14:30,16:00,C301,2026S
+CHEM1656,Project Management,A,John Lee,Tue,16:00,17:30,D210,2025F
+BIO1657,Information Systems,B,Alice Chan,Wed,18:00,20:00,D305,2025S
+ECON1658,Cybersecurity Fundamentals,C,Mary Wong,Thu,08:30,10:00,E110,2026F
+ART1659,Machine Learning,D,David Smith,Fri,10:00,11:30,F402,2026S
+COMP1660,Data Communications,A,Kevin Brown,Mon,11:30,13:00,A101,2025F
+MATH1661,Operating Systems,B,Lisa Chen,Tue,13:00,14:30,A108,2025S
+STAT1662,Database Systems,C,Peter Ho,Wed,14:30,16:00,A202,2026F
+BUS1663,Software Engineering,D,Grace Lam,Thu,16:00,17:30,B201,2026S
+ENG1664,Computer Networks,A,Helen Zhao,Fri,18:00,20:00,B202,2025F
+PHYS1665,Calculus,B,Michael Tan,Mon,08:30,10:00,B301,2025S
+CHEM1666,Probability and Statistics,C,Sarah Liu,Tue,10:00,11:30,C105,2026F
+BIO1667,Business Analytics,D,Daniel Wu,Wed,11:30,13:00,C301,2026S
+ECON1668,Academic Writing,A,Emma Chen,Thu,13:00,14:30,D210,2025F
+ART1669,Digital Design,B,Robert Young,Fri,14:30,16:00,D305,2025S
+COMP1670,Cloud Computing,C,Anna Wang,Mon,16:00,17:30,E110,2026F
+MATH1671,Network Security,D,Victor Lam,Tue,18:00,20:00,F402,2026S
+STAT1672,Artificial Intelligence,A,John Lee,Wed,08:30,10:00,A101,2025F
+BUS1673,Web Development,B,Alice Chan,Thu,10:00,11:30,A108,2025S
+ENG1674,Linear Algebra,C,Mary Wong,Fri,11:30,13:00,A202,2026F
+PHYS1675,Discrete Mathematics,D,David Smith,Mon,13:00,14:30,B201,2026S
+CHEM1676,Project Management,A,Kevin Brown,Tue,14:30,16:00,B202,2025F
+BIO1677,Information Systems,B,Lisa Chen,Wed,16:00,17:30,B301,2025S
+ECON1678,Cybersecurity Fundamentals,C,Peter Ho,Thu,18:00,20:00,C105,2026F
+ART1679,Machine Learning,D,Grace Lam,Fri,08:30,10:00,C301,2026S
+COMP1680,Data Communications,A,Helen Zhao,Mon,10:00,11:30,D210,2025F
+MATH1681,Operating Systems,B,Michael Tan,Tue,11:30,13:00,D305,2025S
+STAT1682,Database Systems,C,Sarah Liu,Wed,13:00,14:30,E110,2026F
+BUS1683,Software Engineering,D,Daniel Wu,Thu,14:30,16:00,F402,2026S
+ENG1684,Computer Networks,A,Emma Chen,Fri,16:00,17:30,A101,2025F
+PHYS1685,Calculus,B,Robert Young,Mon,18:00,20:00,A108,2025S
+CHEM1686,Probability and Statistics,C,Anna Wang,Tue,08:30,10:00,A202,2026F
+BIO1687,Business Analytics,D,Victor Lam,Wed,10:00,11:30,B201,2026S
+ECON1688,Academic Writing,A,John Lee,Thu,11:30,13:00,B202,2025F
+ART1689,Digital Design,B,Alice Chan,Fri,13:00,14:30,B301,2025S
+COMP1690,Cloud Computing,C,Mary Wong,Mon,14:30,16:00,C105,2026F
+MATH1691,Network Security,D,David Smith,Tue,16:00,17:30,C301,2026S
+STAT1692,Artificial Intelligence,A,Kevin Brown,Wed,18:00,20:00,D210,2025F
+BUS1693,Web Development,B,Lisa Chen,Thu,08:30,10:00,D305,2025S
+ENG1694,Linear Algebra,C,Peter Ho,Fri,10:00,11:30,E110,2026F
+PHYS1695,Discrete Mathematics,D,Grace Lam,Mon,11:30,13:00,F402,2026S
+CHEM1696,Project Management,A,Helen Zhao,Tue,13:00,14:30,A101,2025F
+BIO1697,Information Systems,B,Michael Tan,Wed,14:30,16:00,A108,2025S
+ECON1698,Cybersecurity Fundamentals,C,Sarah Liu,Thu,16:00,17:30,A202,2026F
+ART1699,Machine Learning,D,Daniel Wu,Fri,18:00,20:00,B201,2026S
+COMP1700,Data Communications,A,Emma Chen,Mon,08:30,10:00,B202,2025F
+MATH1701,Operating Systems,B,Robert Young,Tue,10:00,11:30,B301,2025S
+STAT1702,Database Systems,C,Anna Wang,Wed,11:30,13:00,C105,2026F
+BUS1703,Software Engineering,D,Victor Lam,Thu,13:00,14:30,C301,2026S
+ENG1704,Computer Networks,A,John Lee,Fri,14:30,16:00,D210,2025F
+PHYS1705,Calculus,B,Alice Chan,Mon,16:00,17:30,D305,2025S
+CHEM1706,Probability and Statistics,C,Mary Wong,Tue,18:00,20:00,E110,2026F
+BIO1707,Business Analytics,D,David Smith,Wed,08:30,10:00,F402,2026S
+ECON1708,Academic Writing,A,Kevin Brown,Thu,10:00,11:30,A101,2025F
+ART1709,Digital Design,B,Lisa Chen,Fri,11:30,13:00,A108,2025S
+COMP1710,Cloud Computing,C,Peter Ho,Mon,13:00,14:30,A202,2026F
+MATH1711,Network Security,D,Grace Lam,Tue,14:30,16:00,B201,2026S
+STAT1712,Artificial Intelligence,A,Helen Zhao,Wed,16:00,17:30,B202,2025F
+BUS1713,Web Development,B,Michael Tan,Thu,18:00,20:00,B301,2025S
+ENG1714,Linear Algebra,C,Sarah Liu,Fri,08:30,10:00,C105,2026F
+PHYS1715,Discrete Mathematics,D,Daniel Wu,Mon,10:00,11:30,C301,2026S
+CHEM1716,Project Management,A,Emma Chen,Tue,11:30,13:00,D210,2025F
+BIO1717,Information Systems,B,Robert Young,Wed,13:00,14:30,D305,2025S
+ECON1718,Cybersecurity Fundamentals,C,Anna Wang,Thu,14:30,16:00,E110,2026F
+ART1719,Machine Learning,D,Victor Lam,Fri,16:00,17:30,F402,2026S
+COMP1720,Data Communications,A,John Lee,Mon,18:00,20:00,A101,2025F
+MATH1721,Operating Systems,B,Alice Chan,Tue,08:30,10:00,A108,2025S
+STAT1722,Database Systems,C,Mary Wong,Wed,10:00,11:30,A202,2026F
+BUS1723,Software Engineering,D,David Smith,Thu,11:30,13:00,B201,2026S
+ENG1724,Computer Networks,A,Kevin Brown,Fri,13:00,14:30,B202,2025F
+PHYS1725,Calculus,B,Lisa Chen,Mon,14:30,16:00,B301,2025S
+CHEM1726,Probability and Statistics,C,Peter Ho,Tue,16:00,17:30,C105,2026F
+BIO1727,Business Analytics,D,Grace Lam,Wed,18:00,20:00,C301,2026S
+ECON1728,Academic Writing,A,Helen Zhao,Thu,08:30,10:00,D210,2025F
+ART1729,Digital Design,B,Michael Tan,Fri,10:00,11:30,D305,2025S
+COMP1730,Cloud Computing,C,Sarah Liu,Mon,11:30,13:00,E110,2026F
+MATH1731,Network Security,D,Daniel Wu,Tue,13:00,14:30,F402,2026S
+STAT1732,Artificial Intelligence,A,Emma Chen,Wed,14:30,16:00,A101,2025F
+BUS1733,Web Development,B,Robert Young,Thu,16:00,17:30,A108,2025S
+ENG1734,Linear Algebra,C,Anna Wang,Fri,18:00,20:00,A202,2026F
+PHYS1735,Discrete Mathematics,D,Victor Lam,Mon,08:30,10:00,B201,2026S
+CHEM1736,Project Management,A,John Lee,Tue,10:00,11:30,B202,2025F
+BIO1737,Information Systems,B,Alice Chan,Wed,11:30,13:00,B301,2025S
+ECON1738,Cybersecurity Fundamentals,C,Mary Wong,Thu,13:00,14:30,C105,2026F
+ART1739,Machine Learning,D,David Smith,Fri,14:30,16:00,C301,2026S
+COMP1740,Data Communications,A,Kevin Brown,Mon,16:00,17:30,D210,2025F
+MATH1741,Operating Systems,B,Lisa Chen,Tue,18:00,20:00,D305,2025S
+STAT1742,Database Systems,C,Peter Ho,Wed,08:30,10:00,E110,2026F
+BUS1743,Software Engineering,D,Grace Lam,Thu,10:00,11:30,F402,2026S
+ENG1744,Computer Networks,A,Helen Zhao,Fri,11:30,13:00,A101,2025F
+PHYS1745,Calculus,B,Michael Tan,Mon,13:00,14:30,A108,2025S
+CHEM1746,Probability and Statistics,C,Sarah Liu,Tue,14:30,16:00,A202,2026F
+BIO1747,Business Analytics,D,Daniel Wu,Wed,16:00,17:30,B201,2026S
+ECON1748,Academic Writing,A,Emma Chen,Thu,18:00,20:00,B202,2025F
+ART1749,Digital Design,B,Robert Young,Fri,08:30,10:00,B301,2025S
+COMP1750,Cloud Computing,C,Anna Wang,Mon,10:00,11:30,C105,2026F
+MATH1751,Network Security,D,Victor Lam,Tue,11:30,13:00,C301,2026S
+STAT1752,Artificial Intelligence,A,John Lee,Wed,13:00,14:30,D210,2025F
+BUS1753,Web Development,B,Alice Chan,Thu,14:30,16:00,D305,2025S
+ENG1754,Linear Algebra,C,Mary Wong,Fri,16:00,17:30,E110,2026F
+PHYS1755,Discrete Mathematics,D,David Smith,Mon,18:00,20:00,F402,2026S
+CHEM1756,Project Management,A,Kevin Brown,Tue,08:30,10:00,A101,2025F
+BIO1757,Information Systems,B,Lisa Chen,Wed,10:00,11:30,A108,2025S
+ECON1758,Cybersecurity Fundamentals,C,Peter Ho,Thu,11:30,13:00,A202,2026F
+ART1759,Machine Learning,D,Grace Lam,Fri,13:00,14:30,B201,2026S
+COMP1760,Data Communications,A,Helen Zhao,Mon,14:30,16:00,B202,2025F
+MATH1761,Operating Systems,B,Michael Tan,Tue,16:00,17:30,B301,2025S
+STAT1762,Database Systems,C,Sarah Liu,Wed,18:00,20:00,C105,2026F
+BUS1763,Software Engineering,D,Daniel Wu,Thu,08:30,10:00,C301,2026S
+ENG1764,Computer Networks,A,Emma Chen,Fri,10:00,11:30,D210,2025F
+PHYS1765,Calculus,B,Robert Young,Mon,11:30,13:00,D305,2025S
+CHEM1766,Probability and Statistics,C,Anna Wang,Tue,13:00,14:30,E110,2026F
+BIO1767,Business Analytics,D,Victor Lam,Wed,14:30,16:00,F402,2026S
+ECON1768,Academic Writing,A,John Lee,Thu,16:00,17:30,A101,2025F
+ART1769,Digital Design,B,Alice Chan,Fri,18:00,20:00,A108,2025S
+COMP1770,Cloud Computing,C,Mary Wong,Mon,08:30,10:00,A202,2026F
+MATH1771,Network Security,D,David Smith,Tue,10:00,11:30,B201,2026S
+STAT1772,Artificial Intelligence,A,Kevin Brown,Wed,11:30,13:00,B202,2025F
+BUS1773,Web Development,B,Lisa Chen,Thu,13:00,14:30,B301,2025S
+ENG1774,Linear Algebra,C,Peter Ho,Fri,14:30,16:00,C105,2026F
+PHYS1775,Discrete Mathematics,D,Grace Lam,Mon,16:00,17:30,C301,2026S
+CHEM1776,Project Management,A,Helen Zhao,Tue,18:00,20:00,D210,2025F
+BIO1777,Information Systems,B,Michael Tan,Wed,08:30,10:00,D305,2025S
+ECON1778,Cybersecurity Fundamentals,C,Sarah Liu,Thu,10:00,11:30,E110,2026F
+ART1779,Machine Learning,D,Daniel Wu,Fri,11:30,13:00,F402,2026S
+COMP1780,Data Communications,A,Emma Chen,Mon,13:00,14:30,A101,2025F
+MATH1781,Operating Systems,B,Robert Young,Tue,14:30,16:00,A108,2025S
+STAT1782,Database Systems,C,Anna Wang,Wed,16:00,17:30,A202,2026F
+BUS1783,Software Engineering,D,Victor Lam,Thu,18:00,20:00,B201,2026S
+ENG1784,Computer Networks,A,John Lee,Fri,08:30,10:00,B202,2025F
+PHYS1785,Calculus,B,Alice Chan,Mon,10:00,11:30,B301,2025S
+CHEM1786,Probability and Statistics,C,Mary Wong,Tue,11:30,13:00,C105,2026F
+BIO1787,Business Analytics,D,David Smith,Wed,13:00,14:30,C301,2026S
+ECON1788,Academic Writing,A,Kevin Brown,Thu,14:30,16:00,D210,2025F
+ART1789,Digital Design,B,Lisa Chen,Fri,16:00,17:30,D305,2025S
+COMP1790,Cloud Computing,C,Peter Ho,Mon,18:00,20:00,E110,2026F
+MATH1791,Network Security,D,Grace Lam,Tue,08:30,10:00,F402,2026S
+STAT1792,Artificial Intelligence,A,Helen Zhao,Wed,10:00,11:30,A101,2025F
+BUS1793,Web Development,B,Michael Tan,Thu,11:30,13:00,A108,2025S
+ENG1794,Linear Algebra,C,Sarah Liu,Fri,13:00,14:30,A202,2026F
+PHYS1795,Discrete Mathematics,D,Daniel Wu,Mon,14:30,16:00,B201,2026S
+CHEM1796,Project Management,A,Emma Chen,Tue,16:00,17:30,B202,2025F
+BIO1797,Information Systems,B,Robert Young,Wed,18:00,20:00,B301,2025S
+ECON1798,Cybersecurity Fundamentals,C,Anna Wang,Thu,08:30,10:00,C105,2026F
+ART1799,Machine Learning,D,Victor Lam,Fri,10:00,11:30,C301,2026S
+COMP1800,Data Communications,A,John Lee,Mon,11:30,13:00,D210,2025F
+MATH1801,Operating Systems,B,Alice Chan,Tue,13:00,14:30,D305,2025S
+STAT1802,Database Systems,C,Mary Wong,Wed,14:30,16:00,E110,2026F
+BUS1803,Software Engineering,D,David Smith,Thu,16:00,17:30,F402,2026S
+ENG1804,Computer Networks,A,Kevin Brown,Fri,18:00,20:00,A101,2025F
+PHYS1805,Calculus,B,Lisa Chen,Mon,08:30,10:00,A108,2025S
+CHEM1806,Probability and Statistics,C,Peter Ho,Tue,10:00,11:30,A202,2026F
+BIO1807,Business Analytics,D,Grace Lam,Wed,11:30,13:00,B201,2026S
+ECON1808,Academic Writing,A,Helen Zhao,Thu,13:00,14:30,B202,2025F
+ART1809,Digital Design,B,Michael Tan,Fri,14:30,16:00,B301,2025S
+COMP1810,Cloud Computing,C,Sarah Liu,Mon,16:00,17:30,C105,2026F
+MATH1811,Network Security,D,Daniel Wu,Tue,18:00,20:00,C301,2026S
+STAT1812,Artificial Intelligence,A,Emma Chen,Wed,08:30,10:00,D210,2025F
+BUS1813,Web Development,B,Robert Young,Thu,10:00,11:30,D305,2025S
+ENG1814,Linear Algebra,C,Anna Wang,Fri,11:30,13:00,E110,2026F
+PHYS1815,Discrete Mathematics,D,Victor Lam,Mon,13:00,14:30,F402,2026S
+CHEM1816,Project Management,A,John Lee,Tue,14:30,16:00,A101,2025F
+BIO1817,Information Systems,B,Alice Chan,Wed,16:00,17:30,A108,2025S
+ECON1818,Cybersecurity Fundamentals,C,Mary Wong,Thu,18:00,20:00,A202,2026F
+ART1819,Machine Learning,D,David Smith,Fri,08:30,10:00,B201,2026S
+COMP1820,Data Communications,A,Kevin Brown,Mon,10:00,11:30,B202,2025F
+MATH1821,Operating Systems,B,Lisa Chen,Tue,11:30,13:00,B301,2025S
+STAT1822,Database Systems,C,Peter Ho,Wed,13:00,14:30,C105,2026F
+BUS1823,Software Engineering,D,Grace Lam,Thu,14:30,16:00,C301,2026S
+ENG1824,Computer Networks,A,Helen Zhao,Fri,16:00,17:30,D210,2025F
+PHYS1825,Calculus,B,Michael Tan,Mon,18:00,20:00,D305,2025S
+CHEM1826,Probability and Statistics,C,Sarah Liu,Tue,08:30,10:00,E110,2026F
+BIO1827,Business Analytics,D,Daniel Wu,Wed,10:00,11:30,F402,2026S
+ECON1828,Academic Writing,A,Emma Chen,Thu,11:30,13:00,A101,2025F
+ART1829,Digital Design,B,Robert Young,Fri,13:00,14:30,A108,2025S
+COMP1830,Cloud Computing,C,Anna Wang,Mon,14:30,16:00,A202,2026F
+MATH1831,Network Security,D,Victor Lam,Tue,16:00,17:30,B201,2026S
+STAT1832,Artificial Intelligence,A,John Lee,Wed,18:00,20:00,B202,2025F
+BUS1833,Web Development,B,Alice Chan,Thu,08:30,10:00,B301,2025S
+ENG1834,Linear Algebra,C,Mary Wong,Fri,10:00,11:30,C105,2026F
+PHYS1835,Discrete Mathematics,D,David Smith,Mon,11:30,13:00,C301,2026S
+CHEM1836,Project Management,A,Kevin Brown,Tue,13:00,14:30,D210,2025F
+BIO1837,Information Systems,B,Lisa Chen,Wed,14:30,16:00,D305,2025S
+ECON1838,Cybersecurity Fundamentals,C,Peter Ho,Thu,16:00,17:30,E110,2026F
+ART1839,Machine Learning,D,Grace Lam,Fri,18:00,20:00,F402,2026S
+COMP1840,Data Communications,A,Helen Zhao,Mon,08:30,10:00,A101,2025F
+MATH1841,Operating Systems,B,Michael Tan,Tue,10:00,11:30,A108,2025S
+STAT1842,Database Systems,C,Sarah Liu,Wed,11:30,13:00,A202,2026F
+BUS1843,Software Engineering,D,Daniel Wu,Thu,13:00,14:30,B201,2026S
+ENG1844,Computer Networks,A,Emma Chen,Fri,14:30,16:00,B202,2025F
+PHYS1845,Calculus,B,Robert Young,Mon,16:00,17:30,B301,2025S
+CHEM1846,Probability and Statistics,C,Anna Wang,Tue,18:00,20:00,C105,2026F
+BIO1847,Business Analytics,D,Victor Lam,Wed,08:30,10:00,C301,2026S
+ECON1848,Academic Writing,A,John Lee,Thu,10:00,11:30,D210,2025F
+ART1849,Digital Design,B,Alice Chan,Fri,11:30,13:00,D305,2025S
+COMP1850,Cloud Computing,C,Mary Wong,Mon,13:00,14:30,E110,2026F
+MATH1851,Network Security,D,David Smith,Tue,14:30,16:00,F402,2026S
+STAT1852,Artificial Intelligence,A,Kevin Brown,Wed,16:00,17:30,A101,2025F
+BUS1853,Web Development,B,Lisa Chen,Thu,18:00,20:00,A108,2025S
+ENG1854,Linear Algebra,C,Peter Ho,Fri,08:30,10:00,A202,2026F
+PHYS1855,Discrete Mathematics,D,Grace Lam,Mon,10:00,11:30,B201,2026S
+CHEM1856,Project Management,A,Helen Zhao,Tue,11:30,13:00,B202,2025F
+BIO1857,Information Systems,B,Michael Tan,Wed,13:00,14:30,B301,2025S
+ECON1858,Cybersecurity Fundamentals,C,Sarah Liu,Thu,14:30,16:00,C105,2026F
+ART1859,Machine Learning,D,Daniel Wu,Fri,16:00,17:30,C301,2026S
+COMP1860,Data Communications,A,Emma Chen,Mon,18:00,20:00,D210,2025F
+MATH1861,Operating Systems,B,Robert Young,Tue,08:30,10:00,D305,2025S
+STAT1862,Database Systems,C,Anna Wang,Wed,10:00,11:30,E110,2026F
+BUS1863,Software Engineering,D,Victor Lam,Thu,11:30,13:00,F402,2026S
+ENG1864,Computer Networks,A,John Lee,Fri,13:00,14:30,A101,2025F
+PHYS1865,Calculus,B,Alice Chan,Mon,14:30,16:00,A108,2025S
+CHEM1866,Probability and Statistics,C,Mary Wong,Tue,16:00,17:30,A202,2026F
+BIO1867,Business Analytics,D,David Smith,Wed,18:00,20:00,B201,2026S
+ECON1868,Academic Writing,A,Kevin Brown,Thu,08:30,10:00,B202,2025F
+ART1869,Digital Design,B,Lisa Chen,Fri,10:00,11:30,B301,2025S
+COMP1870,Cloud Computing,C,Peter Ho,Mon,11:30,13:00,C105,2026F
+MATH1871,Network Security,D,Grace Lam,Tue,13:00,14:30,C301,2026S
+STAT1872,Artificial Intelligence,A,Helen Zhao,Wed,14:30,16:00,D210,2025F
+BUS1873,Web Development,B,Michael Tan,Thu,16:00,17:30,D305,2025S
+ENG1874,Linear Algebra,C,Sarah Liu,Fri,18:00,20:00,E110,2026F
+PHYS1875,Discrete Mathematics,D,Daniel Wu,Mon,08:30,10:00,F402,2026S
+CHEM1876,Project Management,A,Emma Chen,Tue,10:00,11:30,A101,2025F
+BIO1877,Information Systems,B,Robert Young,Wed,11:30,13:00,A108,2025S
+ECON1878,Cybersecurity Fundamentals,C,Anna Wang,Thu,13:00,14:30,A202,2026F
+ART1879,Machine Learning,D,Victor Lam,Fri,14:30,16:00,B201,2026S
+COMP1880,Data Communications,A,John Lee,Mon,16:00,17:30,B202,2025F
+MATH1881,Operating Systems,B,Alice Chan,Tue,18:00,20:00,B301,2025S
+STAT1882,Database Systems,C,Mary Wong,Wed,08:30,10:00,C105,2026F
+BUS1883,Software Engineering,D,David Smith,Thu,10:00,11:30,C301,2026S
+ENG1884,Computer Networks,A,Kevin Brown,Fri,11:30,13:00,D210,2025F
+PHYS1885,Calculus,B,Lisa Chen,Mon,13:00,14:30,D305,2025S
+CHEM1886,Probability and Statistics,C,Peter Ho,Tue,14:30,16:00,E110,2026F
+BIO1887,Business Analytics,D,Grace Lam,Wed,16:00,17:30,F402,2026S
+ECON1888,Academic Writing,A,Helen Zhao,Thu,18:00,20:00,A101,2025F
+ART1889,Digital Design,B,Michael Tan,Fri,08:30,10:00,A108,2025S
+COMP1890,Cloud Computing,C,Sarah Liu,Mon,10:00,11:30,A202,2026F
+MATH1891,Network Security,D,Daniel Wu,Tue,11:30,13:00,B201,2026S
+STAT1892,Artificial Intelligence,A,Emma Chen,Wed,13:00,14:30,B202,2025F
+BUS1893,Web Development,B,Robert Young,Thu,14:30,16:00,B301,2025S
+ENG1894,Linear Algebra,C,Anna Wang,Fri,16:00,17:30,C105,2026F
+PHYS1895,Discrete Mathematics,D,Victor Lam,Mon,18:00,20:00,C301,2026S
+CHEM1896,Project Management,A,John Lee,Tue,08:30,10:00,D210,2025F
+BIO1897,Information Systems,B,Alice Chan,Wed,10:00,11:30,D305,2025S
+ECON1898,Cybersecurity Fundamentals,C,Mary Wong,Thu,11:30,13:00,E110,2026F
+ART1899,Machine Learning,D,David Smith,Fri,13:00,14:30,F402,2026S
+COMP1900,Data Communications,A,Kevin Brown,Mon,14:30,16:00,A101,2025F
+MATH1901,Operating Systems,B,Lisa Chen,Tue,16:00,17:30,A108,2025S
+STAT1902,Database Systems,C,Peter Ho,Wed,18:00,20:00,A202,2026F
+BUS1903,Software Engineering,D,Grace Lam,Thu,08:30,10:00,B201,2026S
+ENG1904,Computer Networks,A,Helen Zhao,Fri,10:00,11:30,B202,2025F
+PHYS1905,Calculus,B,Michael Tan,Mon,11:30,13:00,B301,2025S
+CHEM1906,Probability and Statistics,C,Sarah Liu,Tue,13:00,14:30,C105,2026F
+BIO1907,Business Analytics,D,Daniel Wu,Wed,14:30,16:00,C301,2026S
+ECON1908,Academic Writing,A,Emma Chen,Thu,16:00,17:30,D210,2025F
+ART1909,Digital Design,B,Robert Young,Fri,18:00,20:00,D305,2025S
+COMP1910,Cloud Computing,C,Anna Wang,Mon,08:30,10:00,E110,2026F
+MATH1911,Network Security,D,Victor Lam,Tue,10:00,11:30,F402,2026S
+STAT1912,Artificial Intelligence,A,John Lee,Wed,11:30,13:00,A101,2025F
+BUS1913,Web Development,B,Alice Chan,Thu,13:00,14:30,A108,2025S
+ENG1914,Linear Algebra,C,Mary Wong,Fri,14:30,16:00,A202,2026F
+PHYS1915,Discrete Mathematics,D,David Smith,Mon,16:00,17:30,B201,2026S
+CHEM1916,Project Management,A,Kevin Brown,Tue,18:00,20:00,B202,2025F
+BIO1917,Information Systems,B,Lisa Chen,Wed,08:30,10:00,B301,2025S
+ECON1918,Cybersecurity Fundamentals,C,Peter Ho,Thu,10:00,11:30,C105,2026F
+ART1919,Machine Learning,D,Grace Lam,Fri,11:30,13:00,C301,2026S
+COMP1920,Data Communications,A,Helen Zhao,Mon,13:00,14:30,D210,2025F
+MATH1921,Operating Systems,B,Michael Tan,Tue,14:30,16:00,D305,2025S
+STAT1922,Database Systems,C,Sarah Liu,Wed,16:00,17:30,E110,2026F
+BUS1923,Software Engineering,D,Daniel Wu,Thu,18:00,20:00,F402,2026S
+ENG1924,Computer Networks,A,Emma Chen,Fri,08:30,10:00,A101,2025F
+PHYS1925,Calculus,B,Robert Young,Mon,10:00,11:30,A108,2025S
+CHEM1926,Probability and Statistics,C,Anna Wang,Tue,11:30,13:00,A202,2026F
+BIO1927,Business Analytics,D,Victor Lam,Wed,13:00,14:30,B201,2026S
+ECON1928,Academic Writing,A,John Lee,Thu,14:30,16:00,B202,2025F
+ART1929,Digital Design,B,Alice Chan,Fri,16:00,17:30,B301,2025S
+COMP1930,Cloud Computing,C,Mary Wong,Mon,18:00,20:00,C105,2026F
+MATH1931,Network Security,D,David Smith,Tue,08:30,10:00,C301,2026S
+STAT1932,Artificial Intelligence,A,Kevin Brown,Wed,10:00,11:30,D210,2025F
+BUS1933,Web Development,B,Lisa Chen,Thu,11:30,13:00,D305,2025S
+ENG1934,Linear Algebra,C,Peter Ho,Fri,13:00,14:30,E110,2026F
+PHYS1935,Discrete Mathematics,D,Grace Lam,Mon,14:30,16:00,F402,2026S
+CHEM1936,Project Management,A,Helen Zhao,Tue,16:00,17:30,A101,2025F
+BIO1937,Information Systems,B,Michael Tan,Wed,18:00,20:00,A108,2025S
+ECON1938,Cybersecurity Fundamentals,C,Sarah Liu,Thu,08:30,10:00,A202,2026F
+ART1939,Machine Learning,D,Daniel Wu,Fri,10:00,11:30,B201,2026S
+COMP1940,Data Communications,A,Emma Chen,Mon,11:30,13:00,B202,2025F
+MATH1941,Operating Systems,B,Robert Young,Tue,13:00,14:30,B301,2025S
+STAT1942,Database Systems,C,Anna Wang,Wed,14:30,16:00,C105,2026F
+BUS1943,Software Engineering,D,Victor Lam,Thu,16:00,17:30,C301,2026S
+ENG1944,Computer Networks,A,John Lee,Fri,18:00,20:00,D210,2025F
+PHYS1945,Calculus,B,Alice Chan,Mon,08:30,10:00,D305,2025S
+CHEM1946,Probability and Statistics,C,Mary Wong,Tue,10:00,11:30,E110,2026F
+BIO1947,Business Analytics,D,David Smith,Wed,11:30,13:00,F402,2026S
+ECON1948,Academic Writing,A,Kevin Brown,Thu,13:00,14:30,A101,2025F
+ART1949,Digital Design,B,Lisa Chen,Fri,14:30,16:00,A108,2025S
+COMP1950,Cloud Computing,C,Peter Ho,Mon,16:00,17:30,A202,2026F
+MATH1951,Network Security,D,Grace Lam,Tue,18:00,20:00,B201,2026S
+STAT1952,Artificial Intelligence,A,Helen Zhao,Wed,08:30,10:00,B202,2025F
+BUS1953,Web Development,B,Michael Tan,Thu,10:00,11:30,B301,2025S
+ENG1954,Linear Algebra,C,Sarah Liu,Fri,11:30,13:00,C105,2026F
+PHYS1955,Discrete Mathematics,D,Daniel Wu,Mon,13:00,14:30,C301,2026S
+CHEM1956,Project Management,A,Emma Chen,Tue,14:30,16:00,D210,2025F
+BIO1957,Information Systems,B,Robert Young,Wed,16:00,17:30,D305,2025S
+ECON1958,Cybersecurity Fundamentals,C,Anna Wang,Thu,18:00,20:00,E110,2026F
+ART1959,Machine Learning,D,Victor Lam,Fri,08:30,10:00,F402,2026S
+COMP1960,Data Communications,A,John Lee,Mon,10:00,11:30,A101,2025F
+MATH1961,Operating Systems,B,Alice Chan,Tue,11:30,13:00,A108,2025S
+STAT1962,Database Systems,C,Mary Wong,Wed,13:00,14:30,A202,2026F
+BUS1963,Software Engineering,D,David Smith,Thu,14:30,16:00,B201,2026S
+ENG1964,Computer Networks,A,Kevin Brown,Fri,16:00,17:30,B202,2025F
+PHYS1965,Calculus,B,Lisa Chen,Mon,18:00,20:00,B301,2025S
+CHEM1966,Probability and Statistics,C,Peter Ho,Tue,08:30,10:00,C105,2026F
+BIO1967,Business Analytics,D,Grace Lam,Wed,10:00,11:30,C301,2026S
+ECON1968,Academic Writing,A,Helen Zhao,Thu,11:30,13:00,D210,2025F
+ART1969,Digital Design,B,Michael Tan,Fri,13:00,14:30,D305,2025S
+COMP1970,Cloud Computing,C,Sarah Liu,Mon,14:30,16:00,E110,2026F
+MATH1971,Network Security,D,Daniel Wu,Tue,16:00,17:30,F402,2026S
+STAT1972,Artificial Intelligence,A,Emma Chen,Wed,18:00,20:00,A101,2025F
+BUS1973,Web Development,B,Robert Young,Thu,08:30,10:00,A108,2025S
+ENG1974,Linear Algebra,C,Anna Wang,Fri,10:00,11:30,A202,2026F
+PHYS1975,Discrete Mathematics,D,Victor Lam,Mon,11:30,13:00,B201,2026S
+CHEM1976,Project Management,A,John Lee,Tue,13:00,14:30,B202,2025F
+BIO1977,Information Systems,B,Alice Chan,Wed,14:30,16:00,B301,2025S
+ECON1978,Cybersecurity Fundamentals,C,Mary Wong,Thu,16:00,17:30,C105,2026F
+ART1979,Machine Learning,D,David Smith,Fri,18:00,20:00,C301,2026S
+COMP1980,Data Communications,A,Kevin Brown,Mon,08:30,10:00,D210,2025F
+MATH1981,Operating Systems,B,Lisa Chen,Tue,10:00,11:30,D305,2025S
+STAT1982,Database Systems,C,Peter Ho,Wed,11:30,13:00,E110,2026F
+BUS1983,Software Engineering,D,Grace Lam,Thu,13:00,14:30,F402,2026S
+ENG1984,Computer Networks,A,Helen Zhao,Fri,14:30,16:00,A101,2025F
+PHYS1985,Calculus,B,Michael Tan,Mon,16:00,17:30,A108,2025S
+CHEM1986,Probability and Statistics,C,Sarah Liu,Tue,18:00,20:00,A202,2026F
+BIO1987,Business Analytics,D,Daniel Wu,Wed,08:30,10:00,B201,2026S
+ECON1988,Academic Writing,A,Emma Chen,Thu,10:00,11:30,B202,2025F
+ART1989,Digital Design,B,Robert Young,Fri,11:30,13:00,B301,2025S
+COMP1990,Cloud Computing,C,Anna Wang,Mon,13:00,14:30,C105,2026F
+MATH1991,Network Security,D,Victor Lam,Tue,14:30,16:00,C301,2026S
+STAT1992,Artificial Intelligence,A,John Lee,Wed,16:00,17:30,D210,2025F
+BUS1993,Web Development,B,Alice Chan,Thu,18:00,20:00,D305,2025S
+ENG1994,Linear Algebra,C,Mary Wong,Fri,08:30,10:00,E110,2026F
+PHYS1995,Discrete Mathematics,D,David Smith,Mon,10:00,11:30,F402,2026S
+CHEM1996,Project Management,A,Kevin Brown,Tue,11:30,13:00,A101,2025F
+BIO1997,Information Systems,B,Lisa Chen,Wed,13:00,14:30,A108,2025S
+ECON1998,Cybersecurity Fundamentals,C,Peter Ho,Thu,14:30,16:00,A202,2026F
+ART1999,Machine Learning,D,Grace Lam,Fri,16:00,17:30,B201,2026S
+COMP1003,DAA,C,Jack Qin,Fri,13:00,14:30,C105,2026F
