@@ -244,6 +244,13 @@ void styleStaticBox(wxStaticBoxSizer* sizer, bool dark = false) {
     sizer->GetStaticBox()->SetFont(bodyFont(10, wxFONTWEIGHT_MEDIUM));
 }
 
+void setWhiteText(wxWindow* window) {
+    if (window == nullptr) {
+        return;
+    }
+    window->SetForegroundColour(kOnDark);
+}
+
 bool parseCoursePayloadRow(const std::string& line, CourseRow& row) {
     const std::vector<std::string> fields = Protocol::splitByChar(line, '|');
     if (fields.size() != 9) {
@@ -764,6 +771,7 @@ private:
         querySearchButton_ = new wxButton(formPanel, wxID_ANY, "Search");
         queryResetButton_ = new wxButton(formPanel, wxID_ANY, "Reset");
         styleButton(querySearchButton_, true);
+        setWhiteText(querySearchButton_);
         styleButton(queryResetButton_);
         wxBoxSizer* queryButtonSizer = new wxBoxSizer(wxHORIZONTAL);
         queryButtonSizer->Add(querySearchButton_, 1, wxRIGHT, 8);
@@ -843,6 +851,7 @@ private:
         addButton_ = new wxButton(panel, wxID_ANY, "Add Course");
         styleButton(addResetButton_);
         styleButton(addButton_, true);
+        setWhiteText(addButton_);
         wxBoxSizer* addButtonSizer = new wxBoxSizer(wxHORIZONTAL);
         addButtonSizer->AddStretchSpacer(1);
         addButtonSizer->Add(addResetButton_, 0, wxRIGHT, 8);
@@ -895,6 +904,7 @@ private:
         updateSaveButton_ = new wxButton(panel, wxID_ANY, "Save Changes");
         styleButton(updateCancelButton_);
         styleButton(updateSaveButton_, true);
+        setWhiteText(updateSaveButton_);
         updateButtonSizer->AddStretchSpacer(1);
         updateButtonSizer->Add(updateCancelButton_, 0, wxRIGHT, 8);
         updateButtonSizer->Add(updateSaveButton_, 0);
@@ -948,6 +958,7 @@ private:
         deleteButton_ = new wxButton(panel, wxID_ANY, "Delete Course");
         styleButton(deleteCancelButton_);
         styleButton(deleteButton_, true);
+        setWhiteText(deleteButton_);
         wxBoxSizer* deleteButtonSizer = new wxBoxSizer(wxHORIZONTAL);
         deleteButtonSizer->AddStretchSpacer(1);
         deleteButtonSizer->Add(deleteCancelButton_, 0, wxRIGHT, 8);
