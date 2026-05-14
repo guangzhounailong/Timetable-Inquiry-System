@@ -225,7 +225,9 @@ void styleButton(wxButton* button, bool primary = false, bool darkSurface = fals
     button->SetMinSize(wxSize(primary ? 124 : 96, 34));
     if (primary) {
         button->SetBackgroundColour(kPrimary);
-        button->SetForegroundColour(*wxWHITE);
+        button->SetOwnBackgroundColour(kPrimary);
+        button->SetForegroundColour(kOnDark);
+        button->SetOwnForegroundColour(kOnDark);
     } else if (darkSurface) {
         button->SetBackgroundColour(kSurfaceDarkElevated);
         button->SetForegroundColour(kOnDark);
@@ -671,6 +673,7 @@ private:
         disconnectButton_ = new wxButton(parent, wxID_ANY, "Disconnect");
         styleButton(connectButton_, true);
         styleButton(disconnectButton_);
+        disconnectButton_->SetMinSize(wxSize(124, 34));
         sizer->Add(connectButton_, 0, wxRIGHT, 6);
         sizer->Add(disconnectButton_, 0, wxRIGHT, 16);
 
@@ -915,6 +918,7 @@ private:
         styleTextCtrl(deleteSectionCtrl_);
         styleChoice(deleteSemesterChoice_);
         styleButton(deleteLoadButton_);
+        deleteLoadButton_->SetMinSize(wxSize(124, 34));
         deleteFindSizer->Add(CreateFormLabel(panel, "Course Code *"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         deleteFindSizer->Add(deleteCodeCtrl_, 0, wxRIGHT, 10);
         deleteFindSizer->Add(CreateFormLabel(panel, "Section *"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);

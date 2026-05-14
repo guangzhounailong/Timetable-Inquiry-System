@@ -280,7 +280,7 @@ void printMenu(bool isAdmin) {
               << "1. Query by course code\n"
               << "2. Query by instructor\n"
               << "3. Query by semester\n"
-              << "4. Advanced search by time slot\n"
+              << "4. Query by time slot\n"
               << "5. Administrator login\n";
 
     if (isAdmin) {
