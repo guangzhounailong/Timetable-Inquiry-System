@@ -865,6 +865,7 @@ private:
         styleTextCtrl(updateSectionCtrl_);
         styleChoice(updateLoadSemesterChoice_);
         styleButton(updateLoadButton_);
+        updateLoadButton_->SetMinSize(wxSize(124, 34));
 
         locatorSizer->Add(CreateFormLabel(panel, "Course Code"), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 6);
         locatorSizer->Add(updateCodeCtrl_, 0, wxRIGHT, 10);
